@@ -1,0 +1,11 @@
+export const TOKEN_HEADER = 'X-Vault-Token'
+export const USER_AUTH_PATH = '/v1/auth/user'
+export const USER_AUTH_PATH_REFRESH = '/v1/auth/user/refresh'
+export const TOKEN_DELETE_PATH = '/v1/auth'
+export const RETRIEVE_CATEGORY_PATH = '/v1/category'
+export const RETRIEVE_ROLE_PATH = '/v1/role'
+export const BUCKET_RESOURCE = '/v1/safe-deposit-box'
+export const RETRIEVE_STATS = '/v1/stats'
+
+export const SDB_NAME_MAX_LENGTH = 100
+export const SDB_DESC_MAX_LENGTH = 1000

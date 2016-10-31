@@ -1,0 +1,13 @@
+*~
+node_modules
+.idea/
+/npm-debug.log
+*.iml
+build/browser-bundle.js
+build/browser-bundle.js.map
+build/*.svg
+build/*.png
+reports/
+logs/
+vault/
+*.tar.gz
