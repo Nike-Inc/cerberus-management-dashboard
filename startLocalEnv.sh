@@ -80,7 +80,8 @@ fi
 
 echo
 echo "Starting CMS Locally"
-../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle cms-core-code:runCerberusLocal 1>logs/cerberus-management-service.stdout.log 2>&1 &
+../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle clean build -x check
+java -jar -D@appId=cms -D@environment=local -Dvault.addr=${VAULT_ADDR} -Dvault.token=${VAULT_TOKEN} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 ../cerberus-management-service/build/libs/*.jar 1>logs/cerberus-management-service.stdout.log 2>&1 &
 
 CERBERUS_MANAGEMENT_SERVICE_PID=$!
 
