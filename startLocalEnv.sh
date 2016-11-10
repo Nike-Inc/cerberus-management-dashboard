@@ -80,7 +80,7 @@ fi
 
 echo
 echo "Starting CMS Locally"
-../java-app-cerberus-management-service/gradlew -b ../java-app-cerberus-management-service/build.gradle jettyRun -Dorg.gradle.jvmargs='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=5005,suspend=n' 1>logs/java-app-cerberus-management-service.stdout.log 2>&1 &
+../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle cms-core-code:runCerberusLocal 1>logs/cerberus-management-service.stdout.log 2>&1 &
 
 CERBERUS_MANAGEMENT_SERVICE_PID=$!
 

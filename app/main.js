@@ -11,22 +11,11 @@ import Stats from './components/Stats/Stats'
 import NotFound from './components/NotFound/NotFound'
 import configureStore from './store/configureStore'
 import { loginUserSuccess, handleSessionExpiration } from './actions/authenticationActions'
-import { Client } from 'burnside'
 import * as cookie from 'cookie'
 import { getLogger } from 'logger'
 import './assets/styles/reactSelect.scss'
 
 var log = getLogger('main')
-
-/**
- * Let the webpack server tell the app whether or not to enable burnside, in prod the header will not be set.
- */
-let cookies = cookie.parse(document.cookie)
-if (cookies['burnside-enabled'] === 'true') {
-    log.info('Burnside enabled')
-    var client = new Client()
-    client.start()
-}
 
 /**
  * This is our redux data store for storing all data retrieved from API Calls and any other state that needs

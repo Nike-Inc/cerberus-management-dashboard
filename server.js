@@ -43,7 +43,6 @@ var server = new WebpackDevServer(compiler, {
         aggregateTimeout: 300,
         poll: 1000
     },
-    headers: { "Set-Cookie": "burnside-enabled=true" },
     stats: { colors: false }
 });
 server.listen(8000, "0.0.0.0", function() {})
