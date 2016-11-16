@@ -19,6 +19,7 @@ var redwire = new RedWire({
 redwire.http('http://localhost:9000/dashboard', '127.0.0.1:8000');
 // redirect rule for Cerberus Management Service
 redwire.http('http://localhost:9000/v1', '127.0.0.1:8080/v1');
+redwire.http('http://localhost:9000/v2', '127.0.0.1:8080/v2');
 // redirect /secret to Hashicoorp Vault
 redwire.http('http://localhost:9000/v1/secret', '127.0.0.1:8200/v1/secret');
 
