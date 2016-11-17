@@ -7,7 +7,7 @@ An API to manage secrets and access to said secrets in the Cerberus ecosystem.
 
 # Group Authentication
 
-## User Login [/v1/auth/user]
+## User Login [/v2/auth/user]
 
 ### Authenticate with Cerberus as a User [GET]
 
@@ -24,18 +24,17 @@ This endpoint will take a Users credentials and proxy the request to Vault to ge
     + Body
 
             {
-                "client_token": "7f6808f1-ede3-2177-aa9d-45f507391310",
-                "policies": [
-                    "web",
-                    "stage"
-                ],
-                "metadata": {
-                    "username": "john.doe@nike.com",
-                    "is_admin": "false",
-                    "groups": "Lst-CDT.CloudPlatformEngine.FTE,Lst-digital.platform-tools.internal"
-                },
-                "lease_duration": 3600,
-                "renewable": true
+                "status": "mfa_req",
+                "client_token": "null",
+                "data": {
+                    "state_token": "jskljdklaj",
+                    "devices": [
+                        {
+                            "id": "123456",
+                            "name": "Google Authenticator"
+                        }
+                    ]
+                }
             }
 
 ## App Login [/v1/auth/iam-role]
@@ -318,3 +317,39 @@ Lists all the possible categories that a safe deposit box can belong to.
                     "last_updated_by": "system"
                 }
             ]
+
+## User Login [/v2/auth/mfa_check]
+
+### Authenticate with Cerberus as a User [POST]
+
+This endpoint will take a Users credentials and proxy the request to Vault to get a Vault token for the user with some extra metadata.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+               "status": "success",
+               "data": {
+                   "client_token": {
+                       "client_token": "7f6808f1-ede3-2177-aa9d-45f507391310",
+                       "policies": [
+                           "web",
+                           "stage"
+                       ],
+                       "metadata": {
+                           "username": "john.doe@nike.com",
+                           "is_admin": "false",
+                           "groups": "Lst-CDT.CloudPlatformEngine.FTE,Lst-digital.platform-tools.internal"
+                       },
+                       "lease_duration": 3600,
+                       "renewable": true
+                   }
+               }
+            }

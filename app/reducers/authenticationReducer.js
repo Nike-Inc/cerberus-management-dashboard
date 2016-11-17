@@ -3,10 +3,13 @@ import * as constants from '../constants/actions'
 
 const initialState = {
     vaultToken: null,
+    stateToken: null,
     userName: null,
     isAuthenticated: false,
     isAuthenticating: false,
     isSessionExpired: false,
+    isMfaRequired: false,
+    mfaDevices: [],
     isAdmin: false,
     groups: [],
     policies: null
@@ -41,7 +44,10 @@ export default createReducer(initialState, {
             isAdmin: false,
             vaultToken: null,
             userName: null,
-            isSessionExpired: false
+            isSessionExpired: false,
+            isMfaRequired: false,
+            mfaDevices: [],
+            stateToken: null
         })
     },
     // logs the user out and resets user data, sets session expired true
@@ -52,7 +58,18 @@ export default createReducer(initialState, {
             isAdmin: false,
             vaultToken: null,
             userName: null,
-            isSessionExpired: true
+            isSessionExpired: true,
+            isMfaRequired: false
+        })
+    },
+    // logs the user out and resets user data, sets session expired true
+    [constants.LOGIN_MFA_REQUIRED]: (state, payload) => {
+        return Object.assign({}, state, {
+            isAuthenticating: false,
+            isAuthenticated: false,
+            isMfaRequired: true,
+            stateToken: payload.stateToken,
+            mfaDevices: payload.mfaDevices
         })
     }
 })
