@@ -1,6 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import Select from 'react-select'
+import log from 'logger'
 
 export default class GroupsSelect extends Component {
 
@@ -11,9 +12,23 @@ export default class GroupsSelect extends Component {
             return {label: group, value: group}
         })
 
+        var containsValue = false
+        options.map(option => {
+            if (option.value == value) {
+                containsValue = true
+            }
+        })
+
+        if (! containsValue) {
+            options.unshift({
+                label: value,
+                value: value
+            })
+        }
+
         return (
             <div className='group-select ncss-form-group'>
-                <Select
+                <Select.Creatable
                     className={((touched && error) ? 'category-select select-container-error' : 'category-select select-container')}
                     onChange = {(v) => { handleBeingTouched(); onChange(v)}}
                     onBlur={() => { handleBeingTouched() }}
