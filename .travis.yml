@@ -1,7 +1,7 @@
 language: node_js
 node_js: "v5.1.0"
 install:
-  - sed -i.bak -e '/"api-mock": ".*",/d' package.json
+  - "sed -i.bak -e '/\"api-mock\": \".*\",/d' package.json"
   - npm install
   - npm run build
   - cd build/
