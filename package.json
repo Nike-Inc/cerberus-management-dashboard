@@ -3,6 +3,10 @@
   "version": "0.6.0",
   "description": "A management dashboard for Cerberus.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Nike-Inc/cerberus-management-dashboard.git"
+  },
   "scripts": {
     "start": "webpack --progress --colors --watch",
     "test": "echo 'no-op'",
