@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --progress --colors --watch",
+    "test": "echo 'no-op'",
     "mocks": "api-mock mocks/API.md --port 3000",
     "dev-mock": "./startLocalEnv.sh --use-mock-cms true",
     "dev": "./startLocalEnv.sh --use-mock-cms false",
