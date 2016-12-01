@@ -1,5 +1,12 @@
 # Cerberus Management Dashboard
 
+This project is a self-service web UI for administration of [Safe Deposit Boxes (SDBs)](http://engineering.nike.com/cerberus/docs/architecture/vault#safe-deposit-box-sdb),
+access control, and data in Cerberus. It is implemented as a React single-page application (SPA).
+
+To learn more about the dashboard and view screenshots, please see the [documentation](http://engineering.nike.com/cerberus/docs/user-guide/dashboard).
+
+To learn more about Cerberus, please visit the [Cerberus website](http://engineering.nike.com/cerberus/).
+
 ## Development
 This project has a couple scripts that are integrated into NPM tasks that enable running the Cerberus stack that resides behind the router locally.
 The `npm run dev-*` tasks will start the locally webpack server and configure a reverse proxy to point at vault that the scripts will start and bootstrap for you.
