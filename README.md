@@ -1,6 +1,7 @@
 # Cerberus Management Dashboard
 
-This project is a self-service web UI for administration of Safe Deposit Boxes (SDBs), access control, and data in Cerberus. It is implemented as a React single-page application (SPA).
+This project is a self-service web UI for administration of [Safe Deposit Boxes (SDBs)](http://engineering.nike.com/cerberus/docs/architecture/vault#safe-deposit-box-sdb),
+access control, and data in Cerberus. It is implemented as a React single-page application (SPA).
 
 To learn more about the dashboard and view screenshots, please see the [documentation](http://engineering.nike.com/cerberus/docs/user-guide/dashboard).
 
