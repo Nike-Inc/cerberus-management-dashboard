@@ -106,17 +106,6 @@ if [ ${USE_MOCK_CMS} = "true" ]
         VAULT_ADDR="http://localhost:8200"
         export VAULT_ADDR=${VAULT_ADDR}
 
-        if [ ${BOOTSTRAP} == "true" ]
-        then
-            echo
-            read -p "Enter the OneLogin api key: " ONE_LOGIN_API_KEY
-            echo
-
-            echo ${ONE_LOGIN_API_KEY}
-
-            VAULT_TOKEN=${ROOT_TOKEN} vault write secret/shared/onelogin/api_key value=${ONE_LOGIN_API_KEY}
-        fi
-
         echo
         echo "Starting CMS Locally"
         ../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle clean build -x check
