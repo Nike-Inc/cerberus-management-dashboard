@@ -124,16 +124,16 @@ export default class VaultSecretForm extends Component {
                                 </div>
 
                                 <div className='row-buttons'>
-                                    <div className="btn-wrapper">
-                                        <input type="checkbox"  className={! entry.revealed.value ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...entry.revealed}/>
+                                    <div className="btn-wrapper btn-wrapper-left">
+                                        <input type="checkbox" className={! entry.revealed.value ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...entry.revealed}/>
                                     </div>
                                     <CopyToClipboard text={entry.value.value}>
-                                        <div className="btn-wrapper">
+                                        <div className={kvMap.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
                                             <div className='row-btn row-btn-copy'></div>
                                         </div>
                                     </CopyToClipboard>
                                     {kvMap.length > 1 &&
-                                        <div className="btn-wrapper">
+                                        <div className="btn-wrapper btn-wrapper-right">
                                             <div className='row-btn row-btn-remove' onClick={() => {kvMap.removeField(index)}}></div>
                                         </div>
                                     }
