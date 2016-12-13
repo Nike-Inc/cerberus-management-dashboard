@@ -7,6 +7,8 @@ import AddButton from '../AddButton/AddButton'
 import * as mSDBActions from '../../actions/manageSafetyDepositBoxActions'
 import './VaultSecretForm.scss'
 import { getLogger } from 'logger'
+const  { DOM: { textarea } } = React
+
 var log = getLogger('create-new-vault-secret')
 
 const fields = [
@@ -52,6 +54,7 @@ const validate = values => {
         validate
     }
 )
+
 export default class VaultSecretForm extends Component {
     render() {
         const {
@@ -104,23 +107,31 @@ export default class VaultSecretForm extends Component {
                                 </div>
                                 <div className='vault-secret-value'>
                                     <div className={((entry.value.touched && entry.value.error) ? 'ncss-input-container error' : 'ncss-input-container')}>
-                                        <input {...entry.value}
-                                            type={entry.revealed.value ? 'text' : 'password'}
-                                            className='ncss-input pt2-sm pr4-sm pb2-sm pl4-sm'
-                                            placeholder='Value' />
+                                        <textarea {...entry.value}
+                                                  type="text"
+                                                  className='ncss-input pt2-sm pr4-sm pb2-sm pl4-sm'
+                                                  placeholder='Value'
+                                                  style={{display: entry.revealed.value ? 'block' : 'none' }}/>
+
+                                        <div className="ncss-input pt2-sm pr4-sm pb2-sm pl4-sm secret-value-placeHolder"
+                                             style={{display: !entry.revealed.value ? 'block' : 'none' }}
+                                        >
+                                            Hidden, click the reveal button
+                                        </div>
+
                                         {entry.value.touched && entry.value.error && <div className='ncss-error-msg'>{entry.value.error}</div>}
                                     </div>
                                 </div>
 
                                 <div className='row-buttons'>
+                                    <div className="btn-wrapper">
+                                        <input type="checkbox"  className={! entry.revealed.value ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...entry.revealed}/>
+                                    </div>
                                     <CopyToClipboard text={entry.value.value}>
                                         <div className="btn-wrapper">
                                             <div className='row-btn row-btn-copy'></div>
                                         </div>
                                     </CopyToClipboard>
-                                    <div className="btn-wrapper">
-                                        <input type="checkbox" className={! entry.revealed.value ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...entry.revealed}/>
-                                    </div>
                                     {kvMap.length > 1 &&
                                         <div className="btn-wrapper">
                                             <div className='row-btn row-btn-remove' onClick={() => {kvMap.removeField(index)}}></div>
@@ -131,7 +142,7 @@ export default class VaultSecretForm extends Component {
                         )}
                     </div>
                     <div className="vault-secret-button-container">
-                        <AddButton handleClick={kvMap.addField} message="Add Key Value Pair" />
+                        <AddButton handleClick={() => {kvMap.addField({'revealed': true})}} message="Add Key Value Pair" />
                         <div id="submit-btn-container">
                             <div className="btn-wrapper">
                                 <div id='cancel-btn'
