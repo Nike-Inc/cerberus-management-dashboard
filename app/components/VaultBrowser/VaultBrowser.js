@@ -61,7 +61,7 @@ export default class VaultBrowser extends Component {
                         <div id="add-form-container">
                             <div className="vault-secret-form-label">Add a new Vault Path</div>
                             <VaultSecretForm initialValues={{
-                                                           kvMap: [{key: null, value: null}],
+                                                           kvMap: [{key: null, value: null, revealed: true}],
                                                            path: null
                                                          }}
                                              pathReadOnly={false}
