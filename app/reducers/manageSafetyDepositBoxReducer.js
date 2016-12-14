@@ -34,6 +34,44 @@ export default createReducer(initialState, {
             hasFetchedKeys: true
         })
     },
+    [action.ADD_VAULT_KEY_IF_NOT_PRESET]: (state, payload) => {
+        let existingList = state.vaultPathKeys
+        let keyToAddIfMissing = payload
+        let newList = []
+        let isKeyPreset = false
+
+        for (let key in existingList) {
+            let value = existingList[key]
+            if (value == keyToAddIfMissing) {
+                isKeyPreset = true
+            }
+            newList.push(value)
+        }
+
+        if (! isKeyPreset) {
+            newList.push(keyToAddIfMissing)
+        }
+
+        return Object.assign({}, state, {
+            vaultPathKeys: newList
+        })
+    },
+    [action.REMOVE_VAULT_KEY_FROM_LOCAL_STORE]: (state, payload) => {
+        let existingList = state.vaultPathKeys
+        let newList = []
+        let keyToRemove = payload
+
+        for (let key in existingList) {
+            let value = existingList[key]
+            if (keyToRemove != value) {
+                newList.push(value)
+            }
+        }
+
+        return Object.assign({}, state, {
+            vaultPathKeys: newList
+        })
+    },
     [action.FETCHING_VAULT_KEYS]: (state) => {
         return Object.assign({}, state, {
             hasFetchedKeys: false
@@ -143,13 +181,11 @@ export default createReducer(initialState, {
             isFetching: false,
             isUpdating: true,
             isActive: true,
-            data: existingMap[fetchingKey]["data"]
+            data: existingMap[fetchingKey] ? existingMap[fetchingKey]['data'] : {}
         }
-
 
         return Object.assign({}, state, {
             vaultSecretsData: newMap
         })
     }
-    
 })

@@ -68,13 +68,15 @@ export default class VaultSecretForm extends Component {
             vaultToken,
             handleSubmit,
             pathReadOnly,
-            vaultSecretsData
+            vaultSecretsData,
+            formKey
         } = this.props
 
         return(
             <div id="vault-add-new-secret-container">
                 <form id='vault-add-new-secret-form' onSubmit={handleSubmit( data => {
-                    dispatch(mSDBActions.commitSecret(navigatedPath, data, vaultToken))
+                    let isNewVaultPath = formKey == 'add-new-secret'
+                    dispatch(mSDBActions.commitSecret(navigatedPath, data, vaultToken, isNewVaultPath))
                 })}>
                     <div id='new-vault-secret-path'>
                         <div id='new-vault-secret-path-label'>Path:</div>

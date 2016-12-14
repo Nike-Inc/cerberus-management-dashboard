@@ -15,7 +15,10 @@ export default createReducer(initialState, {
             newMessages.push(message)
         })
 
-        newMessages.push(payload)
+        newMessages.push({
+            message: payload.message,
+            id: payload.id
+        })
 
         log.info("New Messages", newMessages)
         
@@ -27,10 +30,10 @@ export default createReducer(initialState, {
         let currentMessages = state.messages
         let newMessages = []
         //noinspection JSUnresolvedVariable
-        let indexToRemove = payload
+        let idToRemove = payload
 
-        currentMessages.forEach((message, index) => {
-            if (index != indexToRemove) {
+        currentMessages.forEach((message) => {
+            if (message.id != idToRemove) {
                 newMessages.push(message)
             }
         })

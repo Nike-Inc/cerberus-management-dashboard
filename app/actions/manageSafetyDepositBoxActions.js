@@ -142,6 +142,13 @@ export function removeVaultSecretFromLocalStore(key) {
     }
 }
 
+export function removeVaultNodePathKeyFromLocalStore(key) {
+    return {
+        type: actions.REMOVE_VAULT_KEY_FROM_LOCAL_STORE,
+        payload: key
+    }
+}
+
 export function showAddNewVaultSecret() {
     return {
         type: actions.SHOW_ADD_SECRET_FORM
@@ -154,31 +161,34 @@ export function hideAddNewVaultSecret() {
     }
 }
 
-export function commitSecret(navigatedPath, data, token) {
+export function commitSecret(navigatedPath, data, token, isNewVaultPath) {
     let vaultData = {}
+    let key = data.path
+    let fullPath = `${navigatedPath}${key}`
+
     data.kvMap.map((entry) => {
-        log.info("entry", entry)
         vaultData[entry.key] = entry.value
     })
 
-    log.info(vaultData)
-
     return function (dispatch) {
+        let nestedFolder = key.split('/').length > 1;
+        // let the UI / state know that we are saving the secret, so that the user can't spam the save button
+        // but only if not a nested folder
+        if (! nestedFolder) {
+            dispatch(savingVaultSecret(fullPath))
+        }
+
+        // save the secret
         axios({
             method: 'post',
-            url: `/v1/secret/${navigatedPath}${data.path}`,
+            url: `/v1/secret/${fullPath}`,
             data: vaultData,
             headers: {'X-Vault-Token': token},
             timeout: 60 * 1000 // 1 minute
         })
         .then((response) => {
-            log.info("SUCCESS", response)
-            var fullPath = `${navigatedPath}${data.path}`
-
-            dispatch(storeVaultSecret(fullPath, {}))
-            dispatch(savingVaultSecret(fullPath))
-            dispatch(fetchVaultPathKeys(navigatedPath, token))
-            dispatch(getVaultSecret(fullPath, token))
+            // once saved we can use the data we have locally to update the state, without additional API calls
+            dispatch(updateLocalStateAfterSaveCommit(navigatedPath, key, vaultData, isNewVaultPath))
         })
         .catch((response) => {
             log.error("Failed to save Vault Secret data", response)
@@ -187,10 +197,49 @@ export function commitSecret(navigatedPath, data, token) {
     }
 }
 
+/**
+ * After posting a secret to Vault we can update the local state to represent the new data
+ *
+ * @param prefix, the partial path to Vault Node / Secret (Sort of like a virtual folder)
+ * @param key, the key to the Vault Node / Secret
+ * @param data, the Vault secret data that was saved, we can store this and save an API call
+ * @param isNewVaultPath, boolean, if its a new secret we need to hide the add new form
+ */
+export function updateLocalStateAfterSaveCommit(prefix, key, data, isNewVaultPath) {
+    return (dispatch) => {
+        // we will only store the data, if its not in a nested virtual folder
+        let addSecretData = true;
+
+        // Update the piece of state that stores the keys that are available for the given navigated path.
+        // if a user added a nested secret that is in a folder
+        // ex: foo/bar/bam we would want to add foo/ to the state, so the folder foo shows up in the ui
+        let pieces = key.split('/')
+        if (pieces.length > 1) {
+            key = pieces[0] + '/'
+            addSecretData = false
+        }
+        dispatch(updateStoredKeys(key))
+
+        // Update the stored vault secret data for the given complete path, if the key is not a virtual folder
+        if (addSecretData) {
+            log.info('ADDING KEY DATA')
+            dispatch(storeVaultSecret(`${prefix}${key}`, data))
+        }
+
+        // if this is a new vault path remove the create new form
+        if (isNewVaultPath) {
+            dispatch(hideAddNewVaultSecret())
+        }
+
+        // finally lets let the user know we saved there data
+        dispatch(messengerActions.addNewMessageWithTimeout(`Successfully saved Vault secret at path: ${prefix}${key}`, 2500))
+    }
+}
+
 export function deleteVaultPathConfirm(navigatedPath, label, token) {
     return (dispatch) => {
         let yes = () => {
-            dispatch(deleteVaultPath(`${navigatedPath}`,`${label}`, token))
+            dispatch(deleteVaultPath(navigatedPath, label, token))
             dispatch(modalActions.popModal())
         }
 
@@ -216,8 +265,8 @@ export function deleteVaultPath(navigatedPath, label, token) {
             timeout: 60 * 1000 // 1 minute
         })
             .then((response) => {
-                log.info("SUCCESS", response)
-                dispatch(fetchVaultPathKeys(navigatedPath, token))
+                dispatch(removeVaultSecretFromLocalStore(`${navigatedPath}${label}`))
+                dispatch(removeVaultNodePathKeyFromLocalStore(label))
             })
             .catch((response) => {
                 log.error("Failed to delete Vault Secret", response)
@@ -309,5 +358,12 @@ export function savingVaultSecret(path) {
     return {
         type: actions.SAVING_VAULT_SECRET,
         payload: path
+    }
+}
+
+export function updateStoredKeys(key) {
+    return {
+        type: actions.ADD_VAULT_KEY_IF_NOT_PRESET,
+        payload: key
     }
 }
