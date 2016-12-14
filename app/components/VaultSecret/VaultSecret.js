@@ -70,7 +70,7 @@ export default class VaultSecret extends Component {
                                      pathReadOnly={true}
                                      formKey={`${navigatedPath}${label}`} />
                     <div className="vault-secret-delete-btn" onClick={() => {
-                                dispatch(mSDBActions.deleteVaultPathConfirm(`${navigatedPath}${label}`, vaultToken))
+                                dispatch(mSDBActions.deleteVaultPathConfirm(`${navigatedPath}`,`${label}`, vaultToken))
                             }}>
                         <div className="vault-secret-delete-btn-icon"></div>
                         <div className="vault-secret-delete-btn-label">Delete this Vault Path</div>

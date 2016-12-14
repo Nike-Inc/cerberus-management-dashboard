@@ -44,7 +44,8 @@ const validate = values => {
 @connect((state) => {
     return {
         vaultToken: state.auth.vaultToken,
-        navigatedPath: state.manageSafetyDepositBox.navigatedPath
+        navigatedPath: state.manageSafetyDepositBox.navigatedPath,
+        vaultSecretsData: state.manageSafetyDepositBox.vaultSecretsData
     }
 })
 @reduxForm(
@@ -60,19 +61,22 @@ export default class VaultSecretForm extends Component {
         const {
             fields: {
                 path,
-                kvMap,
+                kvMap
             },
             navigatedPath,
             dispatch,
             vaultToken,
             handleSubmit,
             pathReadOnly,
+            vaultSecretsData,
+            formKey
         } = this.props
 
         return(
             <div id="vault-add-new-secret-container">
                 <form id='vault-add-new-secret-form' onSubmit={handleSubmit( data => {
-                    dispatch(mSDBActions.commitSecret(navigatedPath, data, vaultToken))
+                    let isNewVaultPath = formKey == 'add-new-secret'
+                    dispatch(mSDBActions.commitSecret(navigatedPath, data, vaultToken, isNewVaultPath))
                 })}>
                     <div id='new-vault-secret-path'>
                         <div id='new-vault-secret-path-label'>Path:</div>
@@ -154,7 +158,7 @@ export default class VaultSecretForm extends Component {
                             <div className="btn-wrapper">
                                 <button id='submit-btn'
                                         className='ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-                                        disabled={false}>Save
+                                        disabled={vaultSecretsData[navigatedPath + path.value] ? vaultSecretsData[navigatedPath + path.value].isUpdating : false}>Save
                                 </button>
                             </div>
                         </div>      

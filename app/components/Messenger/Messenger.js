@@ -21,10 +21,10 @@ export default class Messenger extends Component {
             <div id='messenger-container'>
                 {messages.map((message, index) =>
                     <div className="messenger-message" key={index}>
-                        <div className="messenger-message-content">{message}</div>
+                        <div className="messenger-message-content">{message.message}</div>
                         <div className="messenger-message-buttons">
                             <div className="messenger-message-buttons-acknowledge" onClick={() => {
-                                dispatch(messengerActions.removeMessage(index))}
+                                dispatch(messengerActions.removeMessage(message.id))}
                             }></div>
                         </div>
                     </div>
