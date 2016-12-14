@@ -173,7 +173,12 @@ export function commitSecret(navigatedPath, data, token) {
         })
         .then((response) => {
             log.info("SUCCESS", response)
-            location.reload(); // todo hack until I get back from vacation
+            var fullPath = `${navigatedPath}${data.path}`
+
+            dispatch(storeVaultSecret(fullPath, {}))
+            dispatch(savingVaultSecret(fullPath))
+            dispatch(fetchVaultPathKeys(navigatedPath, token))
+            dispatch(getVaultSecret(fullPath, token))
         })
         .catch((response) => {
             log.error("Failed to save Vault Secret data", response)
@@ -182,10 +187,10 @@ export function commitSecret(navigatedPath, data, token) {
     }
 }
 
-export function deleteVaultPathConfirm(path, token) {
+export function deleteVaultPathConfirm(navigatedPath, label, token) {
     return (dispatch) => {
         let yes = () => {
-            dispatch(deleteVaultPath(path, token))
+            dispatch(deleteVaultPath(`${navigatedPath}`,`${label}`, token))
             dispatch(modalActions.popModal())
         }
 
@@ -202,17 +207,17 @@ export function deleteVaultPathConfirm(path, token) {
     }
 }
 
-export function deleteVaultPath(path, token) {
+export function deleteVaultPath(navigatedPath, label, token) {
     return function (dispatch) {
         axios({
             method: 'delete',
-            url: `/v1/secret/${path}`,
+            url: `/v1/secret/${navigatedPath}${label}`,
             headers: {'X-Vault-Token': token},
             timeout: 60 * 1000 // 1 minute
         })
             .then((response) => {
                 log.info("SUCCESS", response)
-                location.reload(); // todo hack until I get back from vacation
+                dispatch(fetchVaultPathKeys(navigatedPath, token))
             })
             .catch((response) => {
                 log.error("Failed to delete Vault Secret", response)
@@ -300,3 +305,9 @@ export function resetSubmittingEditSDBRequest() {
     }
 }
 
+export function savingVaultSecret(path) {
+    return {
+        type: actions.SAVING_VAULT_SECRET,
+        payload: path
+    }
+}

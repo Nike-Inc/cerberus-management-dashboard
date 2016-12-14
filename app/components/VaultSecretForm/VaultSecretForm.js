@@ -42,7 +42,8 @@ const validate = values => {
 @connect((state) => {
     return {
         vaultToken: state.auth.vaultToken,
-        navigatedPath: state.manageSafetyDepositBox.navigatedPath
+        navigatedPath: state.manageSafetyDepositBox.navigatedPath,
+        vaultSecretsData: state.manageSafetyDepositBox.vaultSecretsData
     }
 })
 @reduxForm(
@@ -57,13 +58,14 @@ export default class VaultSecretForm extends Component {
         const {
             fields: {
                 path,
-                kvMap,
+                kvMap
             },
             navigatedPath,
             dispatch,
             vaultToken,
             handleSubmit,
             pathReadOnly,
+            vaultSecretsData
         } = this.props
 
         return(
@@ -143,7 +145,7 @@ export default class VaultSecretForm extends Component {
                             <div className="btn-wrapper">
                                 <button id='submit-btn'
                                         className='ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-                                        disabled={false}>Save
+                                        disabled={vaultSecretsData[navigatedPath + path.value] ? vaultSecretsData[navigatedPath + path.value].isUpdating : false}>Save
                                 </button>
                             </div>
                         </div>      

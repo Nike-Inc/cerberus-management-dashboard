@@ -58,6 +58,7 @@ export default createReducer(initialState, {
         }
         newMap[fetchingKey] = {
             isFetching: true,
+            isUpdating: false,
             isActive: true,
             data: {}
         }
@@ -79,6 +80,7 @@ export default createReducer(initialState, {
 
         newMap[fetchedKey] = {
             isFetching: false,
+            isUpdating: false,
             isActive: true,
             data: payload.data
         }
@@ -125,6 +127,28 @@ export default createReducer(initialState, {
         return Object.assign({}, state, {
             vaultPathKeys: [],
             vaultSecretsData: {}
+        })
+    },
+    [action.SAVING_VAULT_SECRET]: (state, payload) => {
+        let existingMap = state.vaultSecretsData
+        let newMap = {}
+        let fetchingKey = payload
+
+        for (let key in existingMap) {
+            if (existingMap.hasOwnProperty(key)) {
+                newMap[key] = existingMap[key]
+            }
+        }
+        newMap[fetchingKey] = {
+            isFetching: false,
+            isUpdating: true,
+            isActive: true,
+            data: existingMap[fetchingKey]["data"]
+        }
+
+
+        return Object.assign({}, state, {
+            vaultSecretsData: newMap
         })
     }
     
