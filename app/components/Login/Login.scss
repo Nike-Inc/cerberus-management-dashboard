@@ -85,10 +85,25 @@
   #login-form-submit-container {
     padding-top: 25px;
     float: right;
-  }
+    display: flex;
 
-  #login-btn {
-    min-width: 125px;
+    #login-help {
+      padding-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        color: $snkrs_grey;
+        font-weight: bold;
+        &:hover {
+          color: $snkrs_off_white;
+        }
+      }
+    }
+
+    #login-btn {
+      min-width: 125px;
+    }
   }
 }
 

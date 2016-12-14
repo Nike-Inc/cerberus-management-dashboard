@@ -95,6 +95,9 @@ export default class LoginUserForm extends Component {
                         <div id='fountainG_7' className='fountainG'></div>
                         <div id='fountainG_8' className='fountainG'></div>
                     </div>
+                    <div id="login-help">
+                        <a target="_blank" href="/dashboard/help/index.html">Need help?</a>
+                    </div>
                     <button id='login-btn'
                             className='ncss-btn-offwhite ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
                             disabled={isAuthenticating}>Login</button>
