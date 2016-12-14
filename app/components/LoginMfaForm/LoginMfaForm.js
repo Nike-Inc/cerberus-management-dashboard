@@ -88,6 +88,9 @@ export default class LoginMfaForm extends Component {
 
                     </div>
                     <div id='login-form-submit-container'>
+                        <div id="login-help">
+                            <a target="_blank" href="/dashboard/help/index.html">Need help?</a>
+                        </div>
                         <button id='login-mfa-btn'
                                 type='submit'
                                 className='ncss-btn-offwhite ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
