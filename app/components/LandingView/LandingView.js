@@ -10,7 +10,7 @@ export default class LandingView extends Component {
                 <h2>Welcome to the Cerberus Management Dashboard</h2>
                 <h3>Environment: {EnvironmentService.getEnvironment()}</h3>
                 <h3>API Domain: {EnvironmentService.getDomain()}</h3>
-                <h4>For help please visit the <a href="/dashboard/help/index.html">help page</a></h4>
+                <h4>For help please visit the <a target="_blank" href="/dashboard/help/index.html">help page</a></h4>
             </div>
         )
     }
