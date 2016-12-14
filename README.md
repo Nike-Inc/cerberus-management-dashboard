@@ -1,40 +1,54 @@
 # Cerberus Management Dashboard
 
 This project is a self-service web UI for administration of [Safe Deposit Boxes (SDBs)](http://engineering.nike.com/cerberus/docs/architecture/vault#safe-deposit-box-sdb),
-access control, and data in Cerberus. It is implemented as a React single-page application (SPA).
+access control, and data in Cerberus. It is implemented as a [React](https://facebook.github.io/react/) single-page application (SPA).
 
 To learn more about the dashboard and view screenshots, please see the [documentation](http://engineering.nike.com/cerberus/docs/user-guide/dashboard).
 
 To learn more about Cerberus, please visit the [Cerberus website](http://engineering.nike.com/cerberus/).
 
 ## Development
+
 This project has a couple scripts that are integrated into NPM tasks that enable running the Cerberus stack that resides behind the router locally.
-The `npm run dev-*` tasks will start the locally webpack server and configure a reverse proxy to point at vault that the scripts will start and bootstrap for you.
-The Reverse proxy will either point at API Mock which will run a mocked Cerberus Management Service or it will start CMS and point to that. CMS requires that mysql is installed locally.
+The `npm run dev*` tasks will start the locally webpack server and configure a reverse proxy to point at vault that the scripts will start and bootstrap for you.
+The Reverse proxy will either point at API Mock which will run a mocked [Cerberus Management Service (CMS)](https://github.com/Nike-Inc/cerberus-management-service) or it will start a local CMS and point to that.
 
-### Requirements to run the dashboard stack
+Instructions assume development machine is MacOS with [brew](http://brew.sh/) installed.
+
+### Steps to run Dashboard locally with mock CMS
+
+1. Install Vault locally with `brew install vault`
+1. Optional but recommended install [multitail](https://www.vanheusden.com/multitail/) with `brew install multitail`
+1. Install dependencies with `npm install`
+1. Optionally tail the logs, e.g. `multitail logs/*`
+1. Start the local webpack server with mocked CMS with `npm run dev-mock`
+1. Open the Dashboard in a browser, e.g. `open http://localhost:9000/dashboard/`
+1. Login with an email address and any password
+1. Start development
+   1. Note: Hot Module reloading is on so changes to code will auto refresh the app
+
+### Steps to run Dashboard locally with actual CMS
+
 1. Install Vault locally `brew install vault`
-2. (you can skip this if you just want to use mocks `npm run dev-mock`) Clone CMS `git clone https://github.com/Nike-Inc/cerberus-management-service.git ../cerberus-management-service` at the same level as CMD as the scripts assume its located `../cerberus-management-service`
-3. (you can skip this if you just want to use mocks `npm run dev-mock`) Follow the instructions in CMS to get it running locally
-4. Optionally but recommended install multitail `brew install multitail`
+1. Clone CMS at the same level as the dashboard.
+   1. Note: the scripts in this project assume CMS is located at `../cerberus-management-service`.
+   1. For example: `git clone https://github.com/Nike-Inc/cerberus-management-service.git ../cerberus-management-service`
+1. Follow the [instructions in the CMS project](https://github.com/Nike-Inc/cerberus-management-service) to get it running locally.
+   1. After you get CMS and Vault running, shut them down before continuing
+   1. Keep MySql running or start it back up with `mysql.server start`
+1. Optional but recommended install [multitail](https://www.vanheusden.com/multitail/) with `brew install multitail`
+1. Install dependencies with `npm install`
+1. Optionally tail the logs, e.g. `multitail logs/*`
+1. Start the local webpack server with real CMS with `npm run dev`
+   1. Note: This command will start-up both Vault and CMS.
+1. Open the Dashboard in a browser, e.g. `open http://localhost:9000/dashboard/`
+1. Login with actual credentials based on the configured AuthProvider for CMS 
+1. Start development
+   1. Note: Hot Module reloading is on so changes to code will auto refresh the app
+1. Optionally connect a remote debugger from CMS project using default settings in IntelliJ `-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005`
 
-### Run the Cerberus Stack for dashboard dev
-1. Install dependencies `npm install`
-    
-    Tail the logs
 
-    * Monitor the logs in logs/ `multitail logs/*`
-    
-    If running with real cms
-    
-    * Start my sql server `mysql.server start`
-    
-2. Run the start up command
-    
-    Choose one
-    
-    * Start the local webpack server with mocked CMS `npm run dev-mock`
-    * Start the local webpack server with real CMS `npm run dev-real`
-    
-3. Open `open http://localhost:9000/dashboard/`
-4. Develop (Hot Module reloading is on, changes to code will auto refresh the app)
+### Troubleshooting
+
+* Delete Vault folder
+* Delete CMS database if Vault data is out of sync
