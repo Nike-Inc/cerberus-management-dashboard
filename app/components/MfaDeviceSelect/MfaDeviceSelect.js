@@ -4,6 +4,14 @@ import Select from 'react-select'
 
 export default class MfaDeviceSelect extends Component {
 
+    componentDidMount() {
+        var mfaDevices = this.props.mfaDevices;
+        if (!this.props.value && mfaDevices.length > 0) {
+            // choose the first value by default
+            this.props.onChange(mfaDevices[0].id);
+        }
+    }
+
     render() {
         const {mfaDevices, value, onChange, handleBeingTouched, touched, error} = this.props
 
