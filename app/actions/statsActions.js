@@ -16,8 +16,9 @@ export function fetchStats(token) {
         })
         .then(function (response) {
             let stats = response.data
+            console.log(JSON.stringify(stats, null, 4))
             if (stats) {
-                stats['safe_deposit_box_stats'].sort((a, b) => {
+                stats['safe_deposit_box_meta_data'].sort((a, b) => {
                     let dateA =  new Date(a['last_updated_ts']).getTime()
                     let dateB = new Date(b['last_updated_ts']).getTime()
                     return (dateA < dateB) - (dateA > dateB)
