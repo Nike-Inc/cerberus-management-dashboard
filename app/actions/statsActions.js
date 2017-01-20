@@ -7,23 +7,22 @@ import * as messengerActions from '../actions/messengerActions'
 import { getLogger } from 'logger'
 var log = getLogger('stats')
 
-export function fetchStats(token) {
+export function fetchStats(token, pageNumber, perPage) {
     return function(dispatch) {
         return axios({
             url: environmentService.getDomain() + cms.RETRIEVE_STATS,
+            params: {
+                limit: perPage,
+                offset: Math.ceil(pageNumber * perPage)
+            },
             headers: {'X-Vault-Token': token},
             timeout: 10000
         })
         .then(function (response) {
             let stats = response.data
             if (stats) {
-                stats['safe_deposit_box_meta_data'].sort((a, b) => {
-                    let dateA =  new Date(a['last_updated_ts']).getTime()
-                    let dateB = new Date(b['last_updated_ts']).getTime()
-                    return (dateA < dateB) - (dateA > dateB)
-                })
-
                 dispatch(storeStats(stats))
+                dispatch(updatePageNumber(pageNumber))
             } else {
                 log.warn("Stats was null or undefined")
             }
@@ -40,6 +39,24 @@ function storeStats(stats) {
         type: actions.STORE_STATS,
         payload: {
             stats: stats
+        }
+    }
+}
+
+export function updatePerPage(perPage) {
+    return {
+        type: actions.UPDATE_PER_PAGE,
+        payload: {
+            perPage: perPage
+        }
+    }
+}
+
+export function updatePageNumber(pageNumber) {
+    return {
+        type: actions.UPDATE_PAGE_NUMBER,
+        payload: {
+            pageNumber: pageNumber
         }
     }
 }

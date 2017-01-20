@@ -3,21 +3,48 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as statsActions from '../../actions/statsActions'
 import './Stats.scss'
+import ReactPaginate from 'react-paginate'
+import Select from 'react-select'
+import SDBStatSet from '../../components/SDBStatSet/SDBStatSet'
+
 
 @connect((state) => {
     return {
         vaultToken: state.auth.vaultToken,
-        stats: state.stats.stats
+        stats: state.stats.stats,
+        perPage: state.stats.perPage,
+        pageNumber: state.stats.pageNumber
     }
 })
+
 export default class Stats extends Component {
 
+    options = [
+        { value: 10, label: '10' },
+        { value: 50, label: '50' },
+        { value: 100, label: '100' },
+        { value: 1000, label: '1000' }
+    ]
+
     componentDidMount() {
-        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken))
+        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, this.props.pageNumber, this.props.perPage))
     }
 
+    handlePageClick = (data) => {
+        let pageNumber = data.selected;
+
+        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, pageNumber, this.props.perPage));
+    };
+
+    handlePerPageSelect = (selected) => {
+        let perPage = selected.value;
+
+        this.props.dispatch(statsActions.updatePerPage(perPage));
+        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, this.props.pageNumber, perPage));
+    };
+
     render() {
-        const {stats} = this.props
+        const {stats, perPage} = this.props
 
         if (stats['safe_deposit_box_meta_data'] == undefined) {
             return(
@@ -32,31 +59,30 @@ export default class Stats extends Component {
                 <div className="ncss h3">SDB Quick Summary</div>
                 <div className="ncss h4">Total SDBs: {stats.total_sdbcount}</div>
                 <div className="perm-block">
-                    <table className="user-group-read-only-permission-group table">
-                        <tbody>
-                            <tr>
-                                <th className="iam-read-label padding-left">Name</th>
-                                <th className="iam-read-label">Owner</th>
-                                <th className="iam-read-label">Created</th>
-                                <th className="iam-read-label">Created By</th>
-                                <th className="iam-read-label">Last Updated</th>
-                                <th className="iam-read-label">Last Updated By</th>
-                                <th className="iam-read-label">Description</th>
-                            </tr>
-
-                            {stats['safe_deposit_box_meta_data'].map((sdb, index) =>
-                                <tr key={sdb.name} className={(index + 1) % 2 == 0 ? "iam-read-only-perm even-row" : "iam-read-only-perm odd-row"}>
-                                    <td className="padding-left">{sdb.name}</td>
-                                    <td>{sdb.owner}</td>
-                                    <td>{new Date(sdb.created_ts).toString()}</td>
-                                    <td>{sdb.created_by}</td>
-                                    <td>{new Date(sdb.last_updated_ts).toString()}</td>
-                                    <td>{sdb.last_updated_by}</td>
-                                    <td>{sdb.description ? sdb.description : "n/a"}</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    {stats['safe_deposit_box_meta_data'].map((sdb, index) =>
+                        <SDBStatSet sdbStats={sdb}
+                                    key={index}/>
+                    )}
+                </div>
+                <div>
+                    <ReactPaginate pageCount={Math.ceil(stats.total_sdbcount / perPage)}
+                                   pageRangeDisplayed={5}
+                                   marginPagesDisplayed={2}
+                                   previousLabel={"Prev"}
+                                   nextLabel={"Next"}
+                                   onPageChange={this.handlePageClick}
+                                   containerClassName={"pagination"}
+                                   subContainerClassName={"pages pagination"}
+                                   activeClassName={"active"}
+                    />
+                    <Select
+                        className={'category-select select-container'}
+                        onChange = { this.handlePerPageSelect }
+                        value={ this.props.perPage }
+                        placeholder="Show Per Page"
+                        options={this.options}
+                        searchable={false}
+                        clearable={false} />
                 </div>
             </div>
         )

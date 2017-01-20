@@ -55,3 +55,5 @@ export const POP_MODAL = 'POP_MODAL'
 
 // Stats Actions
 export const STORE_STATS = 'STORE_STATS'
+export const UPDATE_PER_PAGE = 'UPDATE_PER_PAGE'
+export const UPDATE_PAGE_NUMBER = 'UPDATE_PAGE_NUMBER'
