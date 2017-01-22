@@ -23,6 +23,7 @@ export function fetchStats(token, pageNumber, perPage) {
             if (stats) {
                 dispatch(storeStats(stats))
                 dispatch(updatePageNumber(pageNumber))
+                window.scrollTo(0, 0)
             } else {
                 log.warn("Stats was null or undefined")
             }

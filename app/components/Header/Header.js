@@ -60,7 +60,7 @@ class UserBox extends Component {
                 <div id='u-b-context-menu' className={this.props.displayUserContextMenu ? 'show-me-block' : 'hide-me'}
                      onMouseEnter={this.handleMouseClickUserName}
                      onMouseLeave={this.handleMouseLeaveUserMenuContext} >
-                    {isAdmin && <div className='context-menu-button' onClick={() => {hashHistory.push('/admin/stats')}}>SDB Summary</div>}
+                    {isAdmin && <div className='context-menu-button' onClick={() => {hashHistory.push('/admin/sdb-metadata')}}>SDB Summary</div>}
                     <div className='context-menu-button' onClick={this.handleMouseClickLogout}>Logout</div>
                 </div>
             </div>

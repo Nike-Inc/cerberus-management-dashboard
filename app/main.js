@@ -7,11 +7,10 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import App from './components/App/App'
 import LandingView from './components/LandingView/LandingView'
 import ManageSDBox from './components/ManageSDBox/ManageSDBox'
-import Stats from './components/Stats/Stats'
+import SDBMetadataList from './components/SDBMetadataList/SDBMetadataList'
 import NotFound from './components/NotFound/NotFound'
 import configureStore from './store/configureStore'
 import { loginUserSuccess, handleSessionExpiration } from './actions/authenticationActions'
-import * as cookie from 'cookie'
 import { getLogger } from 'logger'
 import './assets/styles/reactSelect.scss'
 
@@ -64,7 +63,7 @@ render(
                     <Route path='/' component={App}>
                         <IndexRoute component={LandingView}/>
                         <Route path='manage-safe-deposit-box/:id' component={ManageSDBox}/>
-                        <Route path='admin/stats' component={Stats}/>
+                        <Route path='admin/sdb-metadata' component={SDBMetadataList}/>
                         <Route path='*' component={NotFound} />
                     </Route>
                     <Route path='*' component={NotFound} />

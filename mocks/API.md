@@ -353,3 +353,221 @@ This endpoint will take a Users credentials and proxy the request to Vault to ge
                    }
                }
             }
+            
+# Group Stats
+
+## Basic Stats [/v1/stats]
+
+### Get stats [GET]
+
+Returns basic stats about each safe deposit box (name, owner, last updated ts). Requester must be an admin.
+
++ Response 200 (application/json)
+
+    + Headers
+    
+            X-Vault-Token: 7f6808f1-ede3-2177-aa9d-45f507391310
+        
+    + Body
+    
+            {
+              "safe_deposit_box_stats": [
+                {
+                  "name": "Web",
+                  "owner": "Lst-CDT.CloudPlatformEngine.FTE",
+                  "last_updated_ts": "2016-05-18T06:51:08Z"
+                },
+                {
+                  "name": "OneLogin",
+                  "owner": "Lst-CDT.CloudPlatformEngine.FTE",
+                  "last_updated_ts": "2016-05-18T06:35:55Z"
+                }
+              ],
+              "safe_deposit_box_total": 2
+            }
+            
+# Group Metadata
+
+## SDB Metadata [/v1/metadata]
+
+### Get metadata [GET]
+
+Returns pageable metadata for all SDBs
+You can use has_next and next_offset from the response to paginate through all records
+
++ Parameters
+    + limit (number) - OPTIONAL: The number of records to include in the metadata result. Defaults to 100
+    + offset (number) - OPTIONAL: The offset to use when paginating records. Defaults to 0
+
++ Response 200 (application/json)
+
+    + Headers
+    
+            X-Vault-Token: 7f6808f1-ede3-2177-aa9d-45f507391310
+        
+    + Body
+    
+            {
+                "has_next": false,
+                "next_offset": 10,
+                "limit": 10,
+                "offset": 0,
+                "sdb_count_in_result": 10,
+                "total_sdbcount": 1000,
+                "safe_deposit_box_meta_data": [
+                    {
+                        "name": "dev demo",
+                        "path": "app/dev-demo/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "test\nasdfasdasdfasd\nasdfasdf\n\nasdfasdf\nasdf",
+                        "created_ts": "2017-01-04T23:18:40-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:18:40-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Application.FOO.User": "read",
+                            "Application.BAR.User": "read"
+                        },
+                        "iam_role_permissions": {
+                            "arn:aws:iam::265866363820:role/asdf": "write",
+                            "arn:aws:iam::265866363820:role/fasdf": "write"
+                        }
+                    },
+                    {
+                        "name": "nike dev foo bar",
+                        "path": "app/nike-dev-foo-bar/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "adsfasdfadsfasdf",
+                        "created_ts": "2017-01-04T23:19:03-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:03-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Lst-FOO-bar": "read"
+                        },
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "IaM W d WASD",
+                        "path": "shared/iam-w-d-wasd/",
+                        "category": "Shared",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "CAREBERS",
+                        "created_ts": "2017-01-04T23:19:19-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:19-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {},
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "dev demo",
+                        "path": "app/dev-demo/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "test",
+                        "created_ts": "2017-01-04T23:18:40-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:18:40-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Application.FOO.User": "read"
+                        },
+                        "iam_role_permissions": {
+                            "arn:aws:iam::265866363820:role/asdf": "write"
+                        }
+                    },
+                    {
+                        "name": "nike dev foo bar",
+                        "path": "app/nike-dev-foo-bar/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "adsfasdfadsfasdf",
+                        "created_ts": "2017-01-04T23:19:03-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:03-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Lst-FOO-bar": "read"
+                        },
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "IaM W d WASD",
+                        "path": "shared/iam-w-d-wasd/",
+                        "category": "Shared",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "CAREBERS",
+                        "created_ts": "2017-01-04T23:19:19-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:19-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {},
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "dev demo",
+                        "path": "app/dev-demo/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "test",
+                        "created_ts": "2017-01-04T23:18:40-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:18:40-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Application.FOO.User": "read"
+                        },
+                        "iam_role_permissions": {
+                            "arn:aws:iam::265866363820:role/asdf": "write"
+                        }
+                    },
+                    {
+                        "name": "nike dev foo bar",
+                        "path": "app/nike-dev-foo-bar/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "adsfasdfadsfasdf",
+                        "created_ts": "2017-01-04T23:19:03-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:03-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Lst-FOO-bar": "read"
+                        },
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "IaM W d WASD",
+                        "path": "shared/iam-w-d-wasd/",
+                        "category": "Shared",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "CAREBERS",
+                        "created_ts": "2017-01-04T23:19:19-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:19:19-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {},
+                        "iam_role_permissions": {}
+                    },
+                    {
+                        "name": "dev demo",
+                        "path": "app/dev-demo/",
+                        "category": "Applications",
+                        "owner": "Lst-Squad.Carebears",
+                        "description": "test",
+                        "created_ts": "2017-01-04T23:18:40-08:00",
+                        "created_by": "justin.field@nike.com",
+                        "last_updated_ts": "2017-01-04T23:18:40-08:00",
+                        "last_updated_by": "justin.field@nike.com",
+                        "user_group_permissions": {
+                            "Application.FOO.User": "read"
+                        },
+                        "iam_role_permissions": {
+                            "arn:aws:iam::265866363820:role/asdf": "write"
+                        }
+                    }                                      
+                ]
+            }            
