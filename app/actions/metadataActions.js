@@ -5,12 +5,12 @@ import environmentService from 'EnvironmentService'
 import * as cms from '../constants/cms'
 import * as messengerActions from '../actions/messengerActions'
 import { getLogger } from 'logger'
-var log = getLogger('stats')
+var log = getLogger('metadata')
 
-export function fetchStats(token, pageNumber, perPage) {
+export function fetchMetadata(token, pageNumber, perPage) {
     return function(dispatch) {
         return axios({
-            url: environmentService.getDomain() + cms.RETRIEVE_STATS,
+            url: environmentService.getDomain() + cms.RETRIEVE_METADATA,
             params: {
                 limit: perPage,
                 offset: Math.ceil(pageNumber * perPage)
@@ -19,27 +19,27 @@ export function fetchStats(token, pageNumber, perPage) {
             timeout: 10000
         })
         .then(function (response) {
-            let stats = response.data
-            if (stats) {
-                dispatch(storeStats(stats))
+            let metadata = response.data
+            if (metadata) {
+                dispatch(storeMetadata(metadata))
                 dispatch(updatePageNumber(pageNumber))
                 window.scrollTo(0, 0)
             } else {
-                log.warn("Stats was null or undefined")
+                log.warn("Metadata was null or undefined")
             }
         })
         .catch(function (response) {
-            log.error('Failed to get stats', response)
-            dispatch(messengerActions.addNewMessage(<ApiError message="Failed to retrieve stats" response={response} />))
+            log.error('Failed to get metadata', response)
+            dispatch(messengerActions.addNewMessage(<ApiError message="Failed to retrieve metadata" response={response} />))
         })
     }
 }
 
-function storeStats(stats) {
+function storeMetadata(metadata) {
     return {
-        type: actions.STORE_STATS,
+        type: actions.STORE_METADATA,
         payload: {
-            stats: stats
+            metadata: metadata
         }
     }
 }

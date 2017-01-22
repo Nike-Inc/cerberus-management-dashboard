@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import * as statsActions from '../../actions/statsActions'
+import * as metadataActions from '../../actions/metadataActions'
 import ReactPaginate from 'react-paginate'
 import Select from 'react-select'
 import SDBMetadata from '../SDBMetadata/SDBMetadata'
@@ -11,13 +11,13 @@ import './SDBMetadataList.scss'
 @connect((state) => {
     return {
         vaultToken: state.auth.vaultToken,
-        stats: state.stats.stats,
-        perPage: state.stats.perPage,
-        pageNumber: state.stats.pageNumber
+        metadata: state.metadata.metadata,
+        perPage: state.metadata.perPage,
+        pageNumber: state.metadata.pageNumber
     }
 })
 
-export default class Stats extends Component {
+export default class SDBMetadataList extends Component {
 
     options = [
         { value: 10, label: '10' },
@@ -27,29 +27,29 @@ export default class Stats extends Component {
     ]
 
     componentDidMount() {
-        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, this.props.pageNumber, this.props.perPage))
+        this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, this.props.pageNumber, this.props.perPage))
     }
 
     handlePageClick = (data) => {
         let pageNumber = data.selected;
 
-        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, pageNumber, this.props.perPage));
+        this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, pageNumber, this.props.perPage));
     };
 
     handlePerPageSelect = (selected) => {
         let perPage = selected.value;
 
-        this.props.dispatch(statsActions.updatePerPage(perPage));
-        this.props.dispatch(statsActions.fetchStats(this.props.vaultToken, this.props.pageNumber, perPage));
+        this.props.dispatch(metadataActions.updatePerPage(perPage));
+        this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, this.props.pageNumber, perPage));
     };
 
     render() {
-        const {stats, perPage} = this.props
+        const {metadata, perPage} = this.props
 
-        if (stats['safe_deposit_box_meta_data'] == undefined) {
+        if (metadata['safe_deposit_box_meta_data'] == undefined) {
             return(
                 <div>
-                    NO STATS
+                    NO METADATA
                 </div>
             )
         }
@@ -57,24 +57,24 @@ export default class Stats extends Component {
         return (
             <div className="metadata-list-container">
                 <div className="ncss h3">SDB Metadata</div>
-                <div className="ncss h4">Total SDBs: {stats.total_sdbcount}</div>
-                { paginationMenu(stats, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
+                <div className="ncss h4">Total SDBs: {metadata.total_sdbcount}</div>
+                { paginationMenu(metadata, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
                 <div className="matadata-listings">
-                    {stats['safe_deposit_box_meta_data'].map((sdb, index) =>
+                    {metadata['safe_deposit_box_meta_data'].map((sdb, index) =>
                         <SDBMetadata sdbMetadata={sdb}
                                      key={index}/>
                     )}
                 </div>
-                { paginationMenu(stats, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
+                { paginationMenu(metadata, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
             </div>
         )
     }
 }
 
-const paginationMenu = (stats, options, perPage, handlePerPageSelect, handlePageClick) => {
+const paginationMenu = (metadata, options, perPage, handlePerPageSelect, handlePageClick) => {
     return (
       <div className="metadata-pagination-menu ncss-brand">
-          <ReactPaginate pageCount={Math.ceil(stats.total_sdbcount / perPage)}
+          <ReactPaginate pageCount={Math.ceil(metadata.total_sdbcount / perPage)}
                          pageRangeDisplayed={3}
                          marginPagesDisplayed={1}
                          previousLabel={"Prev"}

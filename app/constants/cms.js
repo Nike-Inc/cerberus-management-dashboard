@@ -6,7 +6,7 @@ export const TOKEN_DELETE_PATH = '/v1/auth'
 export const RETRIEVE_CATEGORY_PATH = '/v1/category'
 export const RETRIEVE_ROLE_PATH = '/v1/role'
 export const BUCKET_RESOURCE = '/v1/safe-deposit-box'
-export const RETRIEVE_STATS = '/v1/metadata'
+export const RETRIEVE_METADATA = '/v1/metadata'
 export const MFA_REQUIRED_STATUS = 'mfa_req'
 
 export const SDB_NAME_MAX_LENGTH = 100

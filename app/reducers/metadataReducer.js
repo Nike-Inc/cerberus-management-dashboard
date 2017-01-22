@@ -2,15 +2,15 @@ import { createReducer } from '../utils'
 import * as constants from '../constants/actions'
 
 const initialState = {
-    stats: {},
+    metadata: {},
     perPage: 100,
     pageNumber: 0
 }
 
 export default createReducer(initialState, {
-    [constants.STORE_STATS]: (state, payload) => {
+    [constants.STORE_METADATA]: (state, payload) => {
         return Object.assign({}, state, {
-            stats: payload.stats
+            metadata: payload.metadata
         })
     },
 
