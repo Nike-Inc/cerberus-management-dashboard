@@ -15,6 +15,7 @@ deploy:
   file: cerberus-dashboard.tar.gz
   on:
     repo: Nike-Inc/cerberus-management-dashboard
+    all_branches: true
     tags: true
 script:
   - npm test
