@@ -17,7 +17,7 @@ export default class SDBDescriptionField extends Component {
                 <div className={((description.touched && description.error) ? 'ncss-textarea-container error' : 'ncss-textarea-container')}>
                     <label className='ncss-label'>Description</label>
                             <textarea className='ncss-textarea pt2-sm pr4-sm pb2-sm pl4-sm'
-                                      placeholder='Enter a description for you Bucket'
+                                      placeholder='Enter a description for your Bucket'
                                       maxLength={`${cms.SDB_DESC_MAX_LENGTH}`}
                                 {...description} />
                     {description.touched && description.error && <div className='ncss-error-msg'>{description.error}</div>}
