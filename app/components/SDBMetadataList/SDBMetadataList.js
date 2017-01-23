@@ -33,14 +33,17 @@ export default class SDBMetadataList extends Component {
     handlePageClick = (data) => {
         let pageNumber = data.selected;
 
+        this.props.dispatch(metadataActions.updatePageNumber(pageNumber));
         this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, pageNumber, this.props.perPage));
     };
 
     handlePerPageSelect = (selected) => {
         let perPage = selected.value;
+        let pageNumber = 0; // default back to the first page
 
         this.props.dispatch(metadataActions.updatePerPage(perPage));
-        this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, this.props.pageNumber, perPage));
+        this.props.dispatch(metadataActions.updatePageNumber(pageNumber))
+        this.props.dispatch(metadataActions.fetchMetadata(this.props.vaultToken, pageNumber, perPage));
     };
 
     render() {
@@ -58,20 +61,20 @@ export default class SDBMetadataList extends Component {
             <div className="metadata-list-container">
                 <div className="ncss h3">SDB Metadata</div>
                 <div className="ncss h4">Total SDBs: {metadata.total_sdbcount}</div>
-                { paginationMenu(metadata, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
+                { paginationMenu(metadata, this.options, perPage, this.props.pageNumber, this.handlePerPageSelect, this.handlePageClick) }
                 <div className="matadata-listings">
                     {metadata['safe_deposit_box_meta_data'].map((sdb, index) =>
                         <SDBMetadata sdbMetadata={sdb}
                                      key={index}/>
                     )}
                 </div>
-                { paginationMenu(metadata, this.options, perPage, this.handlePerPageSelect, this.handlePageClick) }
+                { paginationMenu(metadata, this.options, perPage, this.props.pageNumber, this.handlePerPageSelect, this.handlePageClick) }
             </div>
         )
     }
 }
 
-const paginationMenu = (metadata, options, perPage, handlePerPageSelect, handlePageClick) => {
+const paginationMenu = (metadata, options, perPage, pageNumber, handlePerPageSelect, handlePageClick) => {
     return (
       <div className="metadata-pagination-menu ncss-brand">
           <ReactPaginate pageCount={Math.ceil(metadata.total_sdbcount / perPage)}
@@ -80,6 +83,7 @@ const paginationMenu = (metadata, options, perPage, handlePerPageSelect, handleP
                          previousLabel={"Prev"}
                          nextLabel={"Next"}
                          onPageChange={handlePageClick}
+                         forcePage={pageNumber}
                          containerClassName={"metadata-pagination"}
                          previousClassName={"metadata-previous-btn"}
                          nextClassName={"metadata-next-btn"}

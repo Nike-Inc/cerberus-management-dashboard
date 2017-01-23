@@ -22,7 +22,6 @@ export function fetchMetadata(token, pageNumber, perPage) {
             let metadata = response.data
             if (metadata) {
                 dispatch(storeMetadata(metadata))
-                dispatch(updatePageNumber(pageNumber))
                 window.scrollTo(0, 0)
             } else {
                 log.warn("Metadata was null or undefined")
