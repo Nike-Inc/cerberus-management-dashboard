@@ -53,5 +53,7 @@ export const CLEAR_ALL_MESSAGES = 'CLEAR_ALL_MESSAGES'
 export const PUSH_MODAL = 'PUSH_MODAL'
 export const POP_MODAL = 'POP_MODAL'
 
-// Stats Actions
-export const STORE_STATS = 'STORE_STATS'
+// Metadata Actions
+export const STORE_METADATA = 'STORE_METADATA'
+export const UPDATE_PER_PAGE = 'UPDATE_PER_PAGE'
+export const UPDATE_PAGE_NUMBER = 'UPDATE_PAGE_NUMBER'

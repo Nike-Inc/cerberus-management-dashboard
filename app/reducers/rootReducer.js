@@ -7,7 +7,7 @@ import app from './appReducer'
 import nSDB from './createSDBoxReducer'
 import messenger from './messengerReducer'
 import manageSafetyDepositBox from './manageSafetyDepositBoxReducer'
-import stats from './statsReducer'
+import metadata from './metadataReducer'
 import modal from './modalReducer'
 
 export default combineReducers({
@@ -20,5 +20,5 @@ export default combineReducers({
     routing: routerReducer,
     form: formReducer,
     messenger,
-    stats
+    metadata
 })
