@@ -49,7 +49,7 @@ export default class SDBMetadataList extends Component {
     render() {
         const {metadata, perPage} = this.props
 
-        if (metadata['safe_deposit_box_meta_data'] == undefined) {
+        if (metadata['safe_deposit_box_metadata'] == undefined) {
             return(
                 <div>
                     NO METADATA
@@ -63,7 +63,7 @@ export default class SDBMetadataList extends Component {
                 <div className="ncss h4">Total SDBs: {metadata.total_sdbcount}</div>
                 { paginationMenu(metadata, this.options, perPage, this.props.pageNumber, this.handlePerPageSelect, this.handlePageClick) }
                 <div className="matadata-listings">
-                    {metadata['safe_deposit_box_meta_data'].map((sdb, index) =>
+                    {metadata['safe_deposit_box_metadata'].map((sdb, index) =>
                         <SDBMetadata sdbMetadata={sdb}
                                      key={index}/>
                     )}
