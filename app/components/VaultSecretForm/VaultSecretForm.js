@@ -80,8 +80,10 @@ export default class VaultSecretForm extends Component {
                 })}>
                     <div id='new-vault-secret-path'>
                         <div id='new-vault-secret-path-label'>Path:</div>
-                        <div id='new-vault-secret-path-prefix'>{navigatedPath}</div>
-                        {pathReadOnly && <div className="new-vault-secret-path-user-value-read-only">{path.value}</div>}
+                        <div id='new-vault-secret-path-full'>
+                            {navigatedPath}
+                            {pathReadOnly && <span className="new-vault-secret-path-user-value-read-only">{path.value}</span>}
+                        </div>
                         {! pathReadOnly &&
                             <div id='new-vault-secret-path-user-value'>
                                 <div className='vault-secret-path'>
