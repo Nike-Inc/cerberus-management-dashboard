@@ -1,6 +1,6 @@
 {
   "name": "cerberus-management-dashboard",
-  "version": "0.6.0",
+  "version": "0.12.0",
   "description": "A management dashboard for Cerberus.",
   "main": "index.js",
   "repository": {
