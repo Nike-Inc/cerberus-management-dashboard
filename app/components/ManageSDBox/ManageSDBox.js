@@ -173,23 +173,21 @@ const readOnlyUserGroupPermissions = (userGroupPermissions, roles) => {
 
 const readOnlyIamRolePermissions = (iamRolePermissions, roles) => {
     if (iamRolePermissions == null || iamRolePermissions.length < 1) {
-        return(<div>No IAM Role Permissions Defined</div>)
+        return(<div>No IAM Principal Permissions Defined</div>)
     } else {
         return(
             <div className="perm-block">
-                <div className="read-only-permissions-label">IAM Role Permissions</div>
+                <div className="read-only-permissions-label">IAM Principal Permissions</div>
                 <table className="iam-read-only-permission-group">
                     <tr>
-                        <th className="iam-read-label">Acct ID</th>
-                        <th className="iam-read-label">Role Name</th>
+                        <th className="iam-read-label">IAM Principal ARN</th>
                         <th className="iam-read-label">Role</th>
                     </tr>
 
                     {iamRolePermissions.map((perm, index) => {
                         return (
                             <tr key={perm.id} className={(index + 1) % 2 == 0 ? "iam-read-only-perm even-row" : "iam-read-only-perm odd-row"}>
-                                <td className="iam-read-only-perm-item iam-read-only-perm-acct-id">{perm.accountId}</td>
-                                <td className="iam-read-only-perm-item iam-read-only-perm-role-name">{perm.iamRoleName}</td>
+                                <td className="iam-read-only-perm-item iam-read-only-perm-principal-arn">{perm.iamPrincipalArn}</td>
                                 <td className="iam-read-only-perm-item iam-read-only-perm-role">{roleNameFromId(perm.roleId, roles)}</td>
                             </tr>
                         )

@@ -23,14 +23,7 @@
     padding-top: 10px;
     display: flex;
 
-    .role-perm-acct-id {
-      flex: .15;
-      .ncss-error-msg {
-        padding-left: 2px;
-      }
-    }
-
-    .role-perm-role-name {
+    .role-perm-principal-arn {
       flex: .70;
       padding-left: 5px;
       .ncss-error-msg {

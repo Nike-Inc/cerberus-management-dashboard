@@ -57,14 +57,11 @@ const validateUserGroupPermissions = (permission, index, errors) => {
 
 const validateIamRolePermissions = (permission, index, errors) => {
     errors.iamRolePermissions[`${index}`] = {}
-    if (! permission.accountId) {
-        errors.iamRolePermissions[`${index}`].accountId = 'Required'
-    } else if (! /^\d+$/.test(permission.accountId)) {
-        errors.iamRolePermissions[`${index}`].accountId = 'Numeric only'
-    }
 
-    if (! permission.iamRoleName) {
-        errors.iamRolePermissions[`${index}`].iamRoleName = 'You must enter a IAM role name for this permission'
+    if (! permission.iamPrincipalArn) {
+        errors.iamRolePermissions[`${index}`].iamPrincipalArn = 'You must enter a IAM principal ARN for this permission'
+    } else if (! /^arn:aws:(iam|sts)::.+$/.test(permission.iamPrincipalArn)) {
+        errors.iamRolePermissions[`${index}`].iamPrincipalArn = 'Invalid ARN'
     }
 
     if (! permission.roleId) {

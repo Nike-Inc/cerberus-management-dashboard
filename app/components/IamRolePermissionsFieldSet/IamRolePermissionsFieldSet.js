@@ -26,29 +26,20 @@ export default class IamRolePermissionsFieldSet extends Component {
 
         return (
             <div className='iam-role-permissions'>
-                <div className='iam-role-permissions-label ncss-label'>IAM Role Permissions</div>
+                <div className='iam-role-permissions-label ncss-label'>IAM Principal Permissions</div>
                 <div className="iam-role-permissions-perms-container">
                     <div className="iam-role-permissions-perms-container">
                     {iamRolePermissions.map((permission, index) =>
                         <div key={index}>
                             <div className='iam-role-permissions-permission'>
-                                <div className='role-perm-acct-id'>
-                                    <div className={((permission.accountId.touched && permission.accountId.error) ? 'ncss-input-container error' : 'ncss-input-container')}>
-                                        <input {...permission.accountId}
-                                            type='text'
-                                            className='ncss-input pt2-sm pr4-sm pb2-sm pl4-sm'
-                                            placeholder='AWS Acct Id' />
-                                        {permission.accountId.touched && permission.accountId.error && <div className='ncss-error-msg'>{permission.accountId.error}</div>}
-                                    </div>
-                                </div>
 
-                                <div className='role-perm-role-name'>
-                                    <div className={((permission.iamRoleName.touched && permission.iamRoleName.error) ? 'ncss-input-container error' : 'ncss-input-container')}>
-                                        <input {...permission.iamRoleName}
+                                <div className='role-perm-principal-arn'>
+                                    <div className={((permission.iamPrincipalArn.touched && permission.iamPrincipalArn.error) ? 'ncss-input-container error' : 'ncss-input-container')}>
+                                        <input {...permission.iamPrincipalArn}
                                             type='text'
                                             className='ncss-input pt2-sm pr4-sm pb2-sm pl4-sm'
-                                            placeholder='Role Name' />
-                                        {permission.iamRoleName.touched && permission.iamRoleName.error && <div className='ncss-error-msg'>{permission.iamRoleName.error}</div>}
+                                            placeholder='IAM Principal ARN' />
+                                        {permission.iamPrincipalArn.touched && permission.iamPrincipalArn.error && <div className='ncss-error-msg'>{permission.iamPrincipalArn.error}</div>}
                                     </div>
                                 </div>
 

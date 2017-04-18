@@ -32,7 +32,7 @@ export const fields = [
     'userGroupPermissions[].name',
     'userGroupPermissions[].roleId',
     'iamRolePermissions[].accountId',
-    'iamRolePermissions[].iamRoleName',
+    'iamRolePermissions[].iamPrincipalArn',
     'iamRolePermissions[].roleId'
 ]
 
