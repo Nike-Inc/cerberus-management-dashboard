@@ -31,8 +31,7 @@ export const fields = [
     'owner',
     'userGroupPermissions[].name',
     'userGroupPermissions[].roleId',
-    'iamRolePermissions[].accountId',
-    'iamRolePermissions[].iamRoleName',
+    'iamRolePermissions[].iamPrincipalArn',
     'iamRolePermissions[].roleId'
 ]
 

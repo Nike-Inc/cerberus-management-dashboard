@@ -60,7 +60,7 @@ export default class SDBMetadata extends Component {
                 </div>
                 <div className="sdb-metadata">
                     <div className="sdb-metadata-kv">
-                        <div className="sdb-metadata-label ncss-brand">IAM Role Permissions:</div>
+                        <div className="sdb-metadata-label ncss-brand">IAM Principal Permissions:</div>
                         <div className="sdb-metadata-value">
                             { getPermissionsAsString(sdbMetadata.iam_role_permissions) }
                         </div>
