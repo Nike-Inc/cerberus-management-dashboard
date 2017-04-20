@@ -8,7 +8,7 @@ const doesContainNonAlphaNumericSpaceCharsRegex = /[^a-z\d\s]+/i
 const validate = values => {
     const errors = {}
     errors.userGroupPermissions = {}
-    errors.iamRolePermissions = {}
+    errors.iamPrincipalPermissions = {}
     errors.foo = {}
 
     // Validate the Name field
@@ -37,7 +37,7 @@ const validate = values => {
     }
 
     if (values.userGroupPermissions) {
-        values.iamRolePermissions.map((permission, index) => { validateIamRolePermissions(permission, index, errors) })
+        values.iamPrincipalPermissions.map((permission, index) => { validateIamPrincipalPermissions(permission, index, errors) })
     }
 
     log.debug('Completed validation returning Error:\n' + JSON.stringify(errors, null, 2))
@@ -55,17 +55,17 @@ const validateUserGroupPermissions = (permission, index, errors) => {
     }
 }
 
-const validateIamRolePermissions = (permission, index, errors) => {
-    errors.iamRolePermissions[`${index}`] = {}
+const validateIamPrincipalPermissions = (permission, index, errors) => {
+    errors.iamPrincipalPermissions[`${index}`] = {}
 
     if (! permission.iamPrincipalArn) {
-        errors.iamRolePermissions[`${index}`].iamPrincipalArn = 'You must enter a IAM principal ARN for this permission'
+        errors.iamPrincipalPermissions[`${index}`].iamPrincipalArn = 'You must enter a IAM principal ARN for this permission'
     } else if (! /^arn:aws:(iam|sts)::.+$/.test(permission.iamPrincipalArn)) {
-        errors.iamRolePermissions[`${index}`].iamPrincipalArn = 'Invalid ARN'
+        errors.iamPrincipalPermissions[`${index}`].iamPrincipalArn = 'Invalid ARN'
     }
 
     if (! permission.roleId) {
-        errors.iamRolePermissions[`${index}`].roleId = 'Required'
+        errors.iamPrincipalPermissions[`${index}`].roleId = 'Required'
     }
 }
 
