@@ -25,13 +25,13 @@ export default class IamPrincipalPermissionsFieldSet extends Component {
         const {iamPrincipalPermissions, dispatch, formName, roles} = this.props
 
         return (
-            <div className='iam-role-permissions'>
-                <div className='iam-role-permissions-label ncss-label'>IAM Principal Permissions</div>
-                <div className="iam-role-permissions-perms-container">
-                    <div className="iam-role-permissions-perms-container">
+            <div className='iam-principal-permissions'>
+                <div className='iam-principal-permissions-label ncss-label'>IAM Principal Permissions</div>
+                <div className="iam-principal-permissions-perms-container">
+                    <div className="iam-principal-permissions-perms-container">
                     {iamPrincipalPermissions.map((permission, index) =>
                         <div key={index}>
-                            <div className='iam-role-permissions-permission'>
+                            <div className='iam-principal-permissions-permission'>
 
                                 <div className='role-perm-principal-arn'>
                                     <div className={((permission.iamPrincipalArn.touched && permission.iamPrincipalArn.error) ? 'ncss-input-container error' : 'ncss-input-container')}>
