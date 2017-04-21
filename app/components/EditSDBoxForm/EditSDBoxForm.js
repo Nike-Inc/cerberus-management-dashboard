@@ -5,7 +5,7 @@ import { reduxForm, touch } from 'redux-form'
 
 import GroupsSelect from '../GroupSelect/GroupsSelect'
 import UserGroupPermissionsFieldSet from '../UserGroupPermissionsFieldSet/UserGroupPermissionsFieldSet'
-import IamRolePermissionsFieldSet from '../IamRolePermissionsFieldSet/IamRolePermissionsFieldSet'
+import IamPrincipalPermissionsFieldSet from '../IamPrincipalPermissionsFieldSet/IamPrincipalPermissionsFieldSet'
 import SDBDescriptionField from '../SDBDescriptionField/SDBDescriptionField'
 
 import * as modalActions from '../../actions/modalActions'
@@ -24,15 +24,15 @@ export const fields = [
     'owner',
     'userGroupPermissions[].name',
     'userGroupPermissions[].roleId',
-    'iamRolePermissions[].iamPrincipalArn',
-    'iamRolePermissions[].roleId'
+    'iamPrincipalPermissions[].iamPrincipalArn',
+    'iamPrincipalPermissions[].roleId'
 ]
 
 class EditSDBoxForm extends Component {
 
 
     render() {
-        const { fields: { description, owner, userGroupPermissions, iamRolePermissions },
+        const { fields: { description, owner, userGroupPermissions, iamPrincipalPermissions },
             vaultToken, sdbId, roles, userGroups, hasDomainDataLoaded, dispatch, handleSubmit, isEditSubmitting } = this.props
 
         // Lets not attempt to render everything until we have the data we need, when the domain data has loaded we can pass this
@@ -67,10 +67,10 @@ class EditSDBoxForm extends Component {
                                               userGroups={userGroups}
                                               roles={roles} />
 
-                <IamRolePermissionsFieldSet iamRolePermissions={iamRolePermissions}
-                                            dispatch={dispatch}
-                                            formName={formName}
-                                            roles={roles} />
+                <IamPrincipalPermissionsFieldSet iamPrincipalPermissions={iamPrincipalPermissions}
+                                                 dispatch={dispatch}
+                                                 formName={formName}
+                                                 roles={roles} />
 
                 <div id="submit-btn-container">
                     <div id='cancel-btn'
@@ -99,7 +99,7 @@ let form = reduxForm({
 })(EditSDBoxForm)
 
 export default connect((state) => {
-    const { id, description, owner, userGroupPermissions, iamRolePermissions } = state.manageSafetyDepositBox.data
+    const { id, description, owner, userGroupPermissions, iamPrincipalPermissions } = state.manageSafetyDepositBox.data
 
     return {
         vaultToken: state.auth.vaultToken,
@@ -113,7 +113,7 @@ export default connect((state) => {
             description: description,
             owner: owner,
             userGroupPermissions: userGroupPermissions,
-            iamRolePermissions: iamRolePermissions
+            iamPrincipalPermissions: iamPrincipalPermissions
         }
     }
 })(form)

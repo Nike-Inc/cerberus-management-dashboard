@@ -10,7 +10,7 @@ import GroupsSelect from '../GroupSelect/GroupsSelect'
 import validate from './validator'
 import * as cms from '../../constants/cms'
 import UserGroupPermissionsFieldSet from '../UserGroupPermissionsFieldSet/UserGroupPermissionsFieldSet'
-import IamRolePermissionsFieldSet from '../IamRolePermissionsFieldSet/IamRolePermissionsFieldSet'
+import IamPrincipalPermissionsFieldSet from '../IamPrincipalPermissionsFieldSet/IamPrincipalPermissionsFieldSet'
 import SDBDescriptionField from '../SDBDescriptionField/SDBDescriptionField'
 
 import './CreateSDBoxForm.scss'
@@ -31,8 +31,8 @@ export const fields = [
     'owner',
     'userGroupPermissions[].name',
     'userGroupPermissions[].roleId',
-    'iamRolePermissions[].iamPrincipalArn',
-    'iamRolePermissions[].roleId'
+    'iamPrincipalPermissions[].iamPrincipalArn',
+    'iamPrincipalPermissions[].roleId'
 ]
 
 // connect to the store for the pieces we care about
@@ -81,7 +81,7 @@ export default class CreateSDBoxForm extends Component {
                 categoryId,
                 owner,
                 userGroupPermissions,
-                iamRolePermissions
+                iamPrincipalPermissions
                 },
             categories,
             handleSubmit,
@@ -141,10 +141,10 @@ export default class CreateSDBoxForm extends Component {
                                               userGroups={userGroups}
                                               roles={roles} />
 
-                <IamRolePermissionsFieldSet iamRolePermissions={iamRolePermissions}
-                                            dispatch={dispatch}
-                                            formName={formName}
-                                            roles={roles} />
+                <IamPrincipalPermissionsFieldSet iamPrincipalPermissions={iamPrincipalPermissions}
+                                                 dispatch={dispatch}
+                                                 formName={formName}
+                                                 roles={roles} />
                 
                 <div id="submit-btn-container">
                     <div id='cancel-btn'

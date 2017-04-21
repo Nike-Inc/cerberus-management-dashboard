@@ -124,7 +124,7 @@ export default class ManageSDBox extends Component {
                         { displayPermissions &&
                             <div className="read-only-permissions">
                                 { readOnlyUserGroupPermissions(sdbData.userGroupPermissions, roles) }
-                                { readOnlyIamRolePermissions(sdbData.iamRolePermissions, roles) }
+                                { readOnlyIamPrincipalPermissions(sdbData.iamPrincipalPermissions, roles) }
                             </div>
                         }
 
@@ -171,8 +171,8 @@ const readOnlyUserGroupPermissions = (userGroupPermissions, roles) => {
     }
 }
 
-const readOnlyIamRolePermissions = (iamRolePermissions, roles) => {
-    if (iamRolePermissions == null || iamRolePermissions.length < 1) {
+const readOnlyIamPrincipalPermissions = (iamPrincipalPermissions, roles) => {
+    if (iamPrincipalPermissions == null || iamPrincipalPermissions.length < 1) {
         return(<div>No IAM Principal Permissions Defined</div>)
     } else {
         return(
@@ -184,7 +184,7 @@ const readOnlyIamRolePermissions = (iamRolePermissions, roles) => {
                         <th className="iam-read-label">Role</th>
                     </tr>
 
-                    {iamRolePermissions.map((perm, index) => {
+                    {iamPrincipalPermissions.map((perm, index) => {
                         return (
                             <tr key={perm.id} className={(index + 1) % 2 == 0 ? "iam-read-only-perm even-row" : "iam-read-only-perm odd-row"}>
                                 <td className="iam-read-only-perm-item iam-read-only-perm-principal-arn">{perm.iamPrincipalArn}</td>

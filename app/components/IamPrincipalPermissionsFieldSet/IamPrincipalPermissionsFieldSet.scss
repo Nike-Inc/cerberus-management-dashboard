@@ -1,6 +1,6 @@
 @import '../../assets/styles/common.scss';
 
-.iam-role-permissions {
+.iam-principal-permissions {
   margin-top: 15px;
   border-style: solid;
   border-radius: 2px;
@@ -10,15 +10,15 @@
   padding-right: 7px;
   padding-bottom: 7px;
 
-  .iam-role-permissions-label {
+  .iam-principal-permissions-label {
     padding-top: 5px;
   }
 
-  .iam-role-permissions-perms-container {
+  .iam-principal-permissions-perms-container {
     margin-top: -7px;
   }
 
-  .iam-role-permissions-permission {
+  .iam-principal-permissions-permission {
     width: 100%;
     padding-top: 10px;
     display: flex;
