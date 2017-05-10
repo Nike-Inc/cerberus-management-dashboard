@@ -1,5 +1,6 @@
 import React from 'react'
-import { Component, PropTypes } from 'react'
+import { Component } from 'react'
+import PropTypes from 'prop-types'
 import GroupsSelect from '../GroupSelect/GroupsSelect'
 import RoleSelect from '../RoleSelect/RoleSelect'
 import Buttons from '../Buttons/Buttons'
