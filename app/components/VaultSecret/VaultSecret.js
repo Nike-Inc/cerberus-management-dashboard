@@ -1,5 +1,6 @@
 import React from 'react'
-import { Component, PropTypes } from 'react'
+import { Component } from 'react'
+import PropTypes from 'prop-types'
 import VaultSecretForm from '../VaultSecretForm/VaultSecretForm'
 import * as mSDBActions from '../../actions/manageSafetyDepositBoxActions'
 import './VaultSecret.scss'
