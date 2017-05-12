@@ -12,39 +12,14 @@ function ctrl_c() {
 
 mkdir -p logs
 
-USE_MOCK_CMS="false"
-
-while [[ $# > 1 ]]
-do
-key="$1"
-
-case $key in
-    -m|--use-mock-cms)
-    USE_MOCK_CMS="$2"
-    shift # past argument
-    ;;
-    *)
-            # unknown option
-    ;;
-esac
-shift # past argument or value
-done
-
-echo "Using Mocks: ${USE_MOCK_CMS}"
-
 echo "Starting Cerberus Dashboard local dev env"
 echo ""
 
 echo ""
 echo "Starting vault locally"
 
-if [ ${USE_MOCK_CMS} = "true" ]
-    then
-        vault server -config=local-inmem.hcl 1>logs/vault.stdout.log 2>&1 &
-    else
-        vault server -config=local-persist.hcl 1>logs/vault.stdout.log 2>&1 &
-        data=$(curl -s -X PUT -d '{"secret_shares":5, "secret_threshold": 3}' http://127.0.0.1:8200/v1/sys/init)
-fi
+vault server -config=local-persist.hcl 1>logs/vault.stdout.log 2>&1 &
+data=$(curl -s -X PUT -d '{"secret_shares":5, "secret_threshold": 3}' http://127.0.0.1:8200/v1/sys/init)
 VAULT_PID=$!
 
 echo ""
@@ -53,24 +28,15 @@ sleep 1
 
 if [ -a vault/init-data.json ]
     then
-        BOOTSTRAP="false"
+        echo "Loaded vault data from vault/init-data.json"
+        data=$(cat vault/init-data.json)
     else
-        BOOTSTRAP="true"
-fi
-
-echo "complete bootstrap: ${BOOTSTRAP}"
-
-echo ""
-echo "Bootstrapping vault"
-if [ ${USE_MOCK_CMS} = "true" ] || [ ${BOOTSTRAP} == "true" ]
-    then
         echo "Initializing vault"
         data=$(curl -s -X PUT -d '{"secret_shares":5, "secret_threshold": 3}' http://127.0.0.1:8200/v1/sys/init)
         echo ${data} > vault/init-data.json
-    else
-        echo "Loaded vault data from vault/init-data.json"
-        data=$(cat vault/init-data.json)
 fi
+
+echo "complete bootstrap: ${BOOTSTRAP}"
 
 echo Data = ${data}
 if [ -z ${data} ]
@@ -85,32 +51,17 @@ do
     curl -s -X PUT -d "{\"key\":\"${key}\"}" http://127.0.0.1:8200/v1/sys/unseal
 done
 
-if [ ${USE_MOCK_CMS} = "true" ]
-    then
-        echo "Starting Mock CMS Server"
-        ./node_modules/api-mock/bin/api-mock mocks/API.md --port 8080 1>logs/api-mock.stdout.log 2>&1 &
-        curl -s -X POST -d '{"id":"7f6808f1-ede3-2177-aa9d-45f507391310"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/auth/token/create
+curl -s -X PUT -d '{"rules": "path \"auth/token/lookup\" {policy = \"read\"}"}' -H "X-Vault-Token: ${ROOT_TOKEN}"  http://localhost:8200/v1/sys/policy/lookup-self
+VAULT_TOKEN=$(curl -sb -X POST -d '{"display_name":"cerberus-management-service-token"}' -H "X-Vault-Token: ${ROOT_TOKEN}"  http://localhost:8200/v1/auth/token/create | jq -r .auth.client_token)
+export VAULT_TOKEN=${VAULT_TOKEN}
 
-        echo ""
-        echo "Loading some test data for app/stage"
-        curl -s -X POST -d '{"super_secret_thing":"I am a super elite secret key"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/secret/app/stage
-        curl -s -X POST -d '{"super_secret_thing":"I am a super elite secret key"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/secret/app/stage/other_key
-        curl -s -X POST -d '{"super_secret_thing":"I am a super elite secret key2"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/secret/app/stage/private_key
-        curl -s -X POST -d '{"super_secret_thing":"I am a super elite secret key2"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/secret/app/stage/private_key/sub_key
-        curl -s -X POST -d '{"super_secret_thing":"I am a super elite secret key2"}' -H "X-Vault-Token: ${ROOT_TOKEN}" http://localhost:8200/v1/secret/app/stage/private_key/sub_alt_key
-    else
-        curl -s -X PUT -d '{"rules": "path \"auth/token/lookup\" {policy = \"read\"}"}' -H "X-Vault-Token: ${ROOT_TOKEN}"  http://localhost:8200/v1/sys/policy/lookup-self
-        VAULT_TOKEN=$(curl -sb -X POST -d '{"display_name":"cerberus-management-service-token"}' -H "X-Vault-Token: ${ROOT_TOKEN}"  http://localhost:8200/v1/auth/token/create | jq -r .auth.client_token)
-        export VAULT_TOKEN=${VAULT_TOKEN}
+VAULT_ADDR="http://localhost:8200"
+export VAULT_ADDR=${VAULT_ADDR}
 
-        VAULT_ADDR="http://localhost:8200"
-        export VAULT_ADDR=${VAULT_ADDR}
-
-        echo
-        echo "Starting CMS Locally"
-        ../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle clean build -x check
-        java -jar -D@appId=cms -D@environment=local -Dvault.addr=${VAULT_ADDR} -Dvault.token=${VAULT_TOKEN} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 ../cerberus-management-service/build/libs/*.jar 1>logs/cerberus-management-service.stdout.log 2>&1 &
-fi
+echo
+echo "Starting CMS Locally"
+../cerberus-management-service/gradlew -b ../cerberus-management-service/build.gradle clean build -x check
+java -jar -D@appId=cms -D@environment=local -Dvault.addr=${VAULT_ADDR} -Dvault.token=${VAULT_TOKEN} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 ../cerberus-management-service/build/libs/*.jar 1>logs/cerberus-management-service.stdout.log 2>&1 &
 CERBERUS_MANAGEMENT_SERVICE_PID=$!
 
 

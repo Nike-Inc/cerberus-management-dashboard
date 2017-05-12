@@ -10,9 +10,7 @@
   "scripts": {
     "start": "webpack --progress --colors --watch",
     "test": "echo 'no-op'",
-    "mocks": "api-mock mocks/API.md --port 3000",
-    "dev-mock": "./startLocalEnv.sh --use-mock-cms true",
-    "dev": "./startLocalEnv.sh --use-mock-cms false",
+    "dev": "./startLocalEnv.sh",
     "logs": "multitail logs/*",
     "build": "webpack",
     "artifact": "./buildAndArtifact.sh"
@@ -43,7 +41,6 @@
     "redux-thunk": "2.1.0"
   },
   "devDependencies": {
-    "api-mock": "^0.3.2",
     "babel-core": "6.10.4",
     "babel-eslint": "6.1.0",
     "babel-loader": "6.2.4",
