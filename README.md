@@ -11,23 +11,11 @@ To learn more about Cerberus, please visit the [Cerberus website](http://enginee
 
 This project has a couple scripts that are integrated into NPM tasks that enable running the Cerberus stack that resides behind the router locally.
 The `npm run dev*` tasks will start the locally webpack server and configure a reverse proxy to point at vault that the scripts will start and bootstrap for you.
-The Reverse proxy will either point at API Mock which will run a mocked [Cerberus Management Service (CMS)](https://github.com/Nike-Inc/cerberus-management-service) or it will start a local CMS and point to that.
+The Reverse proxy will point at a local [Cerberus Management Service (CMS)](https://github.com/Nike-Inc/cerberus-management-service).
 
 Instructions assume development machine is MacOS with [brew](http://brew.sh/) installed.
 
-### Steps to run Dashboard locally with mock CMS
-
-1. Install Vault locally with `brew install vault`
-1. Optional but recommended install [multitail](https://www.vanheusden.com/multitail/) with `brew install multitail`
-1. Install dependencies with `npm install`
-1. Optionally tail the logs, e.g. `multitail logs/*`
-1. Start the local webpack server with mocked CMS with `npm run dev-mock`
-1. Open the Dashboard in a browser, e.g. `open http://localhost:9000/dashboard/`
-1. Login with an email address and any password
-1. Start development
-   1. Note: Hot Module reloading is on so changes to code will auto refresh the app
-
-### Steps to run Dashboard locally with actual CMS
+### Steps to run Dashboard locally with CMS
 
 1. Install Vault locally `brew install vault`
 1. Clone CMS at the same level as the dashboard.
