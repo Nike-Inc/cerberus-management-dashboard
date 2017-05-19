@@ -12,7 +12,9 @@ const initialState = {
     mfaDevices: [],
     isAdmin: false,
     groups: [],
-    policies: null
+    policies: null,
+    authTokenTimeoutId: null,
+    sessionWarningTimeoutId: null
 }
 
 export default createReducer(initialState, {
@@ -33,33 +35,19 @@ export default createReducer(initialState, {
             vaultToken: payload.tokenData.client_token,
             userName: payload.tokenData.metadata.username,
             groups: payload.tokenData.metadata.groups.split(/,/),
-            policies: payload.tokenData.policies
+            policies: payload.tokenData.policies,
+            authTokenTimeoutId: payload.authTokenTimeoutId,
+            sessionWarningTimeoutId: payload.sessionWarningTimeoutId
         })
     },
     // logs the user out and resets user data
-    [constants.RESET_USER_AUTH_STATE]: (state) => {
-        return Object.assign({}, state, {
-            isAuthenticating: false,
-            isAuthenticated: false,
-            isAdmin: false,
-            vaultToken: null,
-            userName: null,
-            isSessionExpired: false,
-            isMfaRequired: false,
-            mfaDevices: [],
-            stateToken: null
-        })
+    [constants.RESET_USER_AUTH_STATE]: () => {
+        return initialState
     },
     // logs the user out and resets user data, sets session expired true
-    [constants.SESSION_EXPIRED]: (state) => {
-        return Object.assign({}, state, {
-            isAuthenticating: false,
-            isAuthenticated: false,
-            isAdmin: false,
-            vaultToken: null,
-            userName: null,
-            isSessionExpired: true,
-            isMfaRequired: false
+    [constants.SESSION_EXPIRED]: () => {
+        return Object.assign({}, initialState, {
+            isSessionExpired: true
         })
     },
     // logs the user out and resets user data, sets session expired true
@@ -71,5 +59,25 @@ export default createReducer(initialState, {
             stateToken: payload.stateToken,
             mfaDevices: payload.mfaDevices
         })
-    }
+    },
+    // sets the id of the session warning timeout
+    [constants.SET_SESSION_WARNING_TIMEOUT_ID]: (state, payload) => {
+        return Object.assign({}, state, {
+            sessionWarningTimeoutId: payload.sessionWarningTimeoutId,
+        })
+    },
+    // removes the timeout id of the auth token expire
+    [constants.REMOVE_AUTH_TOKEN_TIMEOUT]: (state) => {
+
+        return Object.assign({}, state, {
+            authTokenTimeoutId: null
+        })
+    },
+    // removes the timeout id of the session warning
+    [constants.REMOVE_SESSION_WARNING_TIMEOUT]: (state) => {
+
+        return Object.assign({}, state, {
+            sessionWarningTimeoutId: null
+        })
+    },
 })

@@ -128,3 +128,9 @@ export function loadManageSDBPage(id, path, vaultToken) {
         hashHistory.push(`/manage-safe-deposit-box/${id}`)
     }
 }
+
+export function resetToInitialState() {
+    return {
+        type: constants.RESET_SIDEBAR_DATA
+    }
+}
