@@ -40,5 +40,9 @@ export default createReducer(initialState, {
                 roles: payload.roles
             }
         })
+    },
+
+    [constants.RESET_SIDEBAR_DATA]: (state) => {
+        return initialState
     }
 })

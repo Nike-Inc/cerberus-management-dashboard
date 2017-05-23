@@ -20,6 +20,7 @@ export default createReducer(initialState, {
             modalStack: newStack
         })
     },
+
     [constants.POP_MODAL]: (state) => {
         let newStack = []
         state.modalStack.map(modal => newStack.push(modal))
@@ -27,6 +28,13 @@ export default createReducer(initialState, {
         
         return Object.assign({}, state, {
             modalStack: newStack
+        })
+    },
+
+    [constants.CLEAR_ALL_MODALS]: (state) => {
+
+        return Object.assign({}, state, {
+            modalStack: []
         })
     }
 })

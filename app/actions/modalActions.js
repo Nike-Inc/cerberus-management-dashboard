@@ -17,3 +17,9 @@ export function popModal() {
         type: actions.POP_MODAL
     }
 }
+
+export function clearAllModals() {
+    return {
+        type: actions.CLEAR_ALL_MODALS
+    }
+}

@@ -367,3 +367,9 @@ export function updateStoredKeys(key) {
         payload: key
     }
 }
+
+export function resetToInitialState() {
+    return {
+        type: actions.RESET_SDB_DATA
+    }
+}

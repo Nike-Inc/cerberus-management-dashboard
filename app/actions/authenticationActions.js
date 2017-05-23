@@ -9,6 +9,9 @@ import * as cms from '../constants/cms'
 import * as headerActions from '../actions/headerActions'
 import * as cmsUtils from '../utils/cmsUtils'
 import ApiError from '../components/ApiError/ApiError'
+import ConfirmationBox from '../components/ConfirmationBox/ConfirmationBox'
+import * as modalActions from '../actions/modalActions'
+import * as manageSDBActions from '../actions/manageSafetyDepositBoxActions'
 import { getLogger } from 'logger'
 
 var log = getLogger('authentication-actions')
@@ -22,13 +25,15 @@ const AUTH_ACTION_TIMEOUT = 10000 // 10 seconds in milliseconds
 /**
  * This action is dispatched when we have a valid response object from the CMS Auth endpoint
  * @param response The json response object from the ldap auth cms endpoint
+ * @param authTokenTimeoutId ID of the timeout that expires the user session
  * @returns {{type: string, payload: {tokenData: *}}} The object to dispatch to trigger the reducer to update the auth state
  */
-export function loginUserSuccess(response) {
+export function loginUserSuccess(response, authTokenTimeoutId) {
     return {
         type: constants.LOGIN_USER_SUCCESS,
         payload: {
             tokenData: response.data.client_token,
+            authTokenTimeoutId: authTokenTimeoutId
         }
     }
 }
@@ -59,7 +64,7 @@ export function loginMfaRequired(response) {
 /**
  * Updates the state to indicate that the user is successfully authenticated.
  */
-function handleUserLogin(response, dispatch) {
+function handleUserLogin(response, dispatch, redirectToWelcome=true) {
     let leaseDurationInSeconds = response.data.data.client_token.lease_duration
     const millisecondsPerSecond = 1000
     const bestGuessOfRequestLatencyInMilliseconds = 120 * millisecondsPerSecond // take 2 minutes off of duration to account for latency
@@ -68,19 +73,30 @@ function handleUserLogin(response, dispatch) {
     let vaultTokenExpiresDateInMilliseconds = (now.getTime() + ((leaseDurationInSeconds * millisecondsPerSecond) - bestGuessOfRequestLatencyInMilliseconds))
 
     let tokenExpiresDate = new Date()
+    let token = response.data.data.client_token.client_token
     tokenExpiresDate.setTime(vaultTokenExpiresDateInMilliseconds)
 
     log.debug(`Setting session timeout to ${tokenExpiresDate}`)
 
+    let timeToExpireTokenInMillis = tokenExpiresDate.getTime() - now.getTime()
+
     setTimeout(() => {
+        dispatch(warnSessionExpiresSoon(token))
+    }, timeToExpireTokenInMillis - 120000)  // warn two minutes before expiration
+
+    let authTokenTimeoutId = setTimeout(() => {
         dispatch(handleSessionExpiration())
-    }, tokenExpiresDate.getTime() - now.getTime())
+    }, timeToExpireTokenInMillis)
 
     sessionStorage.setItem('token', JSON.stringify(response.data))
     sessionStorage.setItem('tokenExpiresDate', tokenExpiresDate)
+    sessionStorage.setItem('userRespondedToSessionWarning', false)
     dispatch(messengerActions.clearAllMessages())
-    dispatch(loginUserSuccess(response.data))
-    dispatch(appActions.fetchSideBarData(response.data.data.client_token.client_token))
+    dispatch(loginUserSuccess(response.data, authTokenTimeoutId))
+    dispatch(appActions.fetchSideBarData(token))
+    if (redirectToWelcome) {
+        hashHistory.push("/")
+    }
 }
 
 /**
@@ -169,7 +185,7 @@ export function finalizeMfaLogin(otpToken, mfaDeviceId, stateToken) {
 /**
  * This action is dispatched to renew a users session token
  */
-export function refreshAuth(token, redirect='/') {
+export function refreshAuth(token, redirectPath='/', redirect=true) {
     return function(dispatch) {
         return axios({
             url: environmentService.getDomain() + cms.USER_AUTH_PATH_REFRESH,
@@ -177,11 +193,12 @@ export function refreshAuth(token, redirect='/') {
             timeout: AUTH_ACTION_TIMEOUT
         })
         .then(function (response) {
-            sessionStorage.setItem('token', JSON.stringify(response.data))
-            dispatch(loginUserSuccess(response.data))
-            hashHistory.push(redirect)
-            log.info(response)
-            dispatch(appActions.fetchSideBarData(response.data.data.client_token.client_token))
+            handleRemoveAuthTokenTimeout()
+            handleRemoveSessionWarningTimeout()
+            handleUserLogin(response, dispatch, false)
+            if (redirect) {
+                hashHistory.push(redirectPath)
+            }
         })
         .catch(function (response) {
             log.error('Failed to login user', response)
@@ -207,6 +224,9 @@ export function logoutUser(token) {
             dispatch(resetAuthState())
             sessionStorage.removeItem('token')
             sessionStorage.removeItem('tokenExpiresDate')
+            sessionStorage.removeItem('userRespondedToSessionWarning')
+            handleRemoveAuthTokenTimeout()
+            handleRemoveSessionWarningTimeout()
             dispatch(headerActions.mouseOutUsername())
             hashHistory.push('/login')
         })
@@ -224,7 +244,13 @@ export function handleSessionExpiration() {
     return function(dispatch) {
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('tokenExpiresDate')
+        sessionStorage.removeItem('userRespondedToSessionWarning')
+        handleRemoveAuthTokenTimeout()
+        handleRemoveSessionWarningTimeout()
         dispatch(expireSession())
+        dispatch(modalActions.clearAllModals())
+        dispatch(manageSDBActions.resetToInitialState())
+        dispatch(appActions.resetToInitialState())
     }
 }
 
@@ -237,5 +263,91 @@ export function resetAuthState() {
 export function expireSession() {
     return {
         type: constants.SESSION_EXPIRED
+    }
+}
+
+export function removeAuthTokenTimeoutId() {
+    return {
+        type: constants.REMOVE_AUTH_TOKEN_TIMEOUT
+    }
+}
+
+export function removeSessionWarningTimeoutId() {
+    return {
+        type: constants.REMOVE_SESSION_WARNING_TIMEOUT
+    }
+}
+
+export function setSessionWarningTimeoutId(id) {
+    return {
+        type: constants.SET_SESSION_WARNING_TIMEOUT_ID,
+        payload: {
+            sessionWarningTimeoutId: id
+        }
+    }
+}
+
+export function handleRemoveAuthTokenTimeout() {
+    return function(dispatch, getState) {
+        clearTimeout(getState().auth.authTokenTimeoutId)
+        dispatch(removeAuthTokenTimeoutId())
+    }
+}
+
+export function handleRemoveSessionWarningTimeout() {
+    return function(dispatch, getState) {
+        clearTimeout(getState().auth.sessionWarningTimeoutId)
+        dispatch(removeSessionWarningTimeoutId())
+    }
+}
+
+export function handleUserRespondedToSessionWarning() {
+    return function() {
+        sessionStorage.setItem('userRespondedToSessionWarning', true)
+    }
+}
+
+/**
+ * Warn the user at specified time that their session is about to expire
+ * @param timeToWarnInMillis - Time at which to warn user
+ * @param tokenStr - Token string
+ */
+export function setSessionWarningTimeout(timeToWarnInMillis, tokenStr) {
+    return function(dispatch) {
+        let userHasRespondedToSessionWarning = sessionStorage.getItem('userRespondedToSessionWarning') === "true";
+
+        if (! userHasRespondedToSessionWarning) {
+            let sessionWarningTimeoutId = setTimeout(() => {
+                dispatch(warnSessionExpiresSoon(tokenStr))
+            }, timeToWarnInMillis)
+
+            dispatch(setSessionWarningTimeoutId(sessionWarningTimeoutId))
+        }
+    }
+}
+
+/**
+ * Warn user that session is about to expire, and give the option to refresh session
+ * @param tokenStr - Token string
+ */
+export function warnSessionExpiresSoon(tokenStr) {
+
+    return function(dispatch) {
+        let yes = () => {
+            dispatch(refreshAuth(tokenStr, "/", false))
+            dispatch(handleUserRespondedToSessionWarning())
+            dispatch(modalActions.popModal())
+        }
+
+        let no = () => {
+            dispatch(handleUserRespondedToSessionWarning())
+            dispatch(modalActions.popModal())
+        }
+
+        let conf = <ConfirmationBox handleYes={yes}
+                                    handleNo={no}
+                                    message="Your session is about to expire. Would you like to stay logged in?"/>
+
+        dispatch(modalActions.pushModal(conf))
     }
 }

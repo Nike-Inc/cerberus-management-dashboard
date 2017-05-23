@@ -187,5 +187,9 @@ export default createReducer(initialState, {
         return Object.assign({}, state, {
             vaultSecretsData: newMap
         })
+    },
+
+    [action.RESET_SDB_DATA]: () => {
+        return initialState
     }
 })

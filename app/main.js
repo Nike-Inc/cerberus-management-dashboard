@@ -10,7 +10,7 @@ import ManageSDBox from './components/ManageSDBox/ManageSDBox'
 import SDBMetadataList from './components/SDBMetadataList/SDBMetadataList'
 import NotFound from './components/NotFound/NotFound'
 import configureStore from './store/configureStore'
-import { loginUserSuccess, handleSessionExpiration } from './actions/authenticationActions'
+import { loginUserSuccess, handleSessionExpiration, setSessionWarningTimeout } from './actions/authenticationActions'
 import { getLogger } from 'logger'
 import './assets/styles/reactSelect.scss'
 
@@ -34,11 +34,17 @@ if (token != null && token != "") {
     let now = new Date()
     
     log.debug(`Token expires on ${tokenExpiresDate}`)
-    
-    setTimeout(() => {
+
+    let dateTokenExpiresInMillis = tokenExpiresDate.getTime() - now.getTime()
+
+    // warn two minutes before token expiration
+    store.dispatch(setSessionWarningTimeout(dateTokenExpiresInMillis - 120000, token.data.client_token.client_token))
+
+    let authTokenTimeoutId = setTimeout(() => {
         store.dispatch(handleSessionExpiration())
-    }, tokenExpiresDate.getTime() - now.getTime())
-    store.dispatch(loginUserSuccess(token))
+    }, dateTokenExpiresInMillis)
+
+    store.dispatch(loginUserSuccess(token, authTokenTimeoutId))
 }
 
 // Create an enhanced history that syncs navigation events with the store
