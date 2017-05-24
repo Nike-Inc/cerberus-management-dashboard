@@ -37,7 +37,6 @@ export default createReducer(initialState, {
             groups: payload.tokenData.metadata.groups.split(/,/),
             policies: payload.tokenData.policies,
             authTokenTimeoutId: payload.authTokenTimeoutId,
-            sessionWarningTimeoutId: payload.sessionWarningTimeoutId
         })
     },
     // logs the user out and resets user data
