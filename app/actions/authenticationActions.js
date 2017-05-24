@@ -80,9 +80,11 @@ function handleUserLogin(response, dispatch, redirectToWelcome=true) {
 
     let timeToExpireTokenInMillis = tokenExpiresDate.getTime() - now.getTime()
 
-    setTimeout(() => {
+    let sessionWarningTimeoutId = setTimeout(() => {
         dispatch(warnSessionExpiresSoon(token))
     }, timeToExpireTokenInMillis - 120000)  // warn two minutes before expiration
+
+    dispatch(setSessionWarningTimeoutId(sessionWarningTimeoutId))
 
     let authTokenTimeoutId = setTimeout(() => {
         dispatch(handleSessionExpiration())
@@ -193,8 +195,8 @@ export function refreshAuth(token, redirectPath='/', redirect=true) {
             timeout: AUTH_ACTION_TIMEOUT
         })
         .then(function (response) {
-            handleRemoveAuthTokenTimeout()
-            handleRemoveSessionWarningTimeout()
+            dispatch(handleRemoveAuthTokenTimeout())
+            dispatch(handleRemoveSessionWarningTimeout())
             handleUserLogin(response, dispatch, false)
             if (redirect) {
                 hashHistory.push(redirectPath)
@@ -221,12 +223,12 @@ export function logoutUser(token) {
             timeout: AUTH_ACTION_TIMEOUT
         })
         .then(function () {
-            dispatch(resetAuthState())
             sessionStorage.removeItem('token')
             sessionStorage.removeItem('tokenExpiresDate')
             sessionStorage.removeItem('userRespondedToSessionWarning')
-            handleRemoveAuthTokenTimeout()
-            handleRemoveSessionWarningTimeout()
+            dispatch(handleRemoveAuthTokenTimeout())
+            dispatch(handleRemoveSessionWarningTimeout())
+            dispatch(resetAuthState())
             dispatch(headerActions.mouseOutUsername())
             hashHistory.push('/login')
         })
@@ -245,8 +247,8 @@ export function handleSessionExpiration() {
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('tokenExpiresDate')
         sessionStorage.removeItem('userRespondedToSessionWarning')
-        handleRemoveAuthTokenTimeout()
-        handleRemoveSessionWarningTimeout()
+        dispatch(handleRemoveAuthTokenTimeout())
+        dispatch(handleRemoveSessionWarningTimeout())
         dispatch(expireSession())
         dispatch(modalActions.clearAllModals())
         dispatch(manageSDBActions.resetToInitialState())
