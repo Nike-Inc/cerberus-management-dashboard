@@ -134,3 +134,40 @@ export function resetToInitialState() {
         type: constants.RESET_SIDEBAR_DATA
     }
 }
+
+/**
+ * Action for loading version data into state
+ */
+export function loadDashboardMetadata() {
+    return function(dispatch) {
+        return axios({
+            url: '/dashboard/metadata.json',
+            timeout: 10000
+        })
+        .then(function (response) {
+            dispatch(storeDashboardMetadata(response.data))
+        })
+        .catch(function (response) {
+            log.error(JSON.stringify(response, null, 2))
+            dispatch(modalActions.popModal())
+            dispatch(messengerActions.addNewMessage(
+                <div className="login-error-msg-container">
+                    <div className="login-error-msg-header">Failed to load dashboard metadata</div>
+                    <div className="login-error-msg-content-wrapper">
+                        <div className="login-error-msg-label">Status Code:</div>
+                        <div className="login-error-msg-cms-msg">{response.status}</div>
+                    </div>
+                </div>
+            ))
+        })
+    }
+}
+
+export function storeDashboardMetadata(data) {
+    return {
+        type: constants.STORE_DOMAIN_DATA,
+        payload: {
+            version: data.version
+        }
+    }
+}
