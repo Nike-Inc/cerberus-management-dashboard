@@ -51,7 +51,7 @@ export default createReducer(initialState, {
     },
 
     // stores the metadata about the dashboard into the state
-    [constants.STORE_DOMAIN_DATA]: (state, payload) => {
+    [constants.STORE_DASHBOARD_METADATA]: (state, payload) => {
         return Object.assign({}, state, {
             metadata: {
                 hasLoaded: true,

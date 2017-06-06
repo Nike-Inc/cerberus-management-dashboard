@@ -165,7 +165,7 @@ export function loadDashboardMetadata() {
 
 export function storeDashboardMetadata(data) {
     return {
-        type: constants.STORE_DOMAIN_DATA,
+        type: constants.STORE_DASHBOARD_METADATA,
         payload: {
             version: data.version
         }
