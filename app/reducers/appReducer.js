@@ -11,6 +11,10 @@ const initialState = {
         hasLoaded: false,
         categories: [],
         roles: []
+    },
+    metadata: {
+        hasLoaded: false,
+        version: 'unknown'
     }
 }
 
@@ -44,5 +48,15 @@ export default createReducer(initialState, {
 
     [constants.RESET_SIDEBAR_DATA]: (state) => {
         return initialState
+    },
+
+    // stores the metadata about the dashboard into the state
+    [constants.STORE_DOMAIN_DATA]: (state, payload) => {
+        return Object.assign({}, state, {
+            metadata: {
+                hasLoaded: true,
+                version: payload.version
+            }
+        })
     }
 })

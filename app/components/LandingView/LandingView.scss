@@ -6,4 +6,11 @@
   a {
     text-decoration: underline;
   }
+
+  display: flex;
+  flex-flow: column;
+
+  #loader {
+    padding-bottom: 5px;
+  }
 }

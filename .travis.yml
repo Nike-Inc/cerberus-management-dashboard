@@ -2,11 +2,7 @@ language: node_js
 node_js: "v5.1.0"
 install:
   - "sed -i.bak -e '/\"api-mock\": \".*\",/d' package.json"
-  - npm install
-  - npm run build
-  - cd build/
-  - tar -zcf ../cerberus-dashboard.tar.gz ./*
-  - cd ../
+  - npm run artifact
 deploy:
   skip_cleanup: true
   provider: releases
