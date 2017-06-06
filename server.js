@@ -3,11 +3,16 @@ var WebpackDevServer = require("webpack-dev-server");
 var webpack = require("webpack");
 var config = require("./webpack.config.js");
 
+var reverseProxyPort = 9001
+var nodeServerPort = 8000
+var cmsPort = 8080
+var vaultPort = 8200
+
 // https://www.npmjs.com/package/redwire
 var RedWire = require('redwire');
 var redwire = new RedWire({
     http: {
-        port: 9000,
+        port: reverseProxyPort,
         websockets: true
     }
 });
@@ -16,16 +21,16 @@ var redwire = new RedWire({
  * Cerberus is a couple services behind a router so we can simulate that locally
  */
 // redirect dashboard to the Cerberus Management Dashboard
-redwire.http('http://localhost:9000/dashboard', '127.0.0.1:8000');
+redwire.http('http://localhost:' + reverseProxyPort + '/dashboard', '127.0.0.1:' + nodeServerPort);
 // redirect rule for Cerberus Management Service
-redwire.http('http://localhost:9000/v1', '127.0.0.1:8080/v1');
-redwire.http('http://localhost:9000/v2', '127.0.0.1:8080/v2');
+redwire.http('http://localhost:' + reverseProxyPort + '/v1', '127.0.0.1:' + cmsPort + '/v1');
+redwire.http('http://localhost:' + reverseProxyPort + '/v2', '127.0.0.1:' + cmsPort + '/v2');
 // redirect /secret to Hashicoorp Vault
-redwire.http('http://localhost:9000/v1/secret', '127.0.0.1:8200/v1/secret');
+redwire.http('http://localhost:' + reverseProxyPort + '/v1/secret', '127.0.0.1:' + vaultPort + '/v1/secret');
 
 // configure proxy for hot module web socket
-redwire.http('http://localhost:9000/sockjs-node', 'http://127.0.0.1:8000/sockjs-node');
-config.entry.app.unshift("webpack-dev-server/client?http://localhost:8000/", "webpack/hot/dev-server");
+redwire.http('http://localhost:' + reverseProxyPort + '/sockjs-node', 'http://127.0.0.1:' + nodeServerPort + '/sockjs-node');
+config.entry.app.unshift('webpack-dev-server/client?http://localhost:' + nodeServerPort + '/', 'webpack/hot/dev-server');
 
 // run the local server
 var compiler = webpack(config);
@@ -46,4 +51,4 @@ var server = new WebpackDevServer(compiler, {
     },
     stats: { colors: false }
 });
-server.listen(8000, "0.0.0.0", function() {})
+server.listen(nodeServerPort, "0.0.0.0", function() {})
