@@ -48,6 +48,22 @@ export function loginUserRequest() {
 }
 
 /**
+ * If the state token is null, then give the server a way to identify the user
+ * by setting the state token to be the authenticating user's id
+ * @param response - Authentication response
+ */
+export function handleLoginMfaRequired(response) {
+
+    return function(dispatch) {
+        if (response.data.data.state_token === null) {
+            response.data.data.state_token = "userId:" + response.data.data.user_id
+        }
+
+        dispatch(loginMfaRequired(response))
+    }
+}
+
+/**
  * Updates the state to indicate that MFA is required for the given user to authenticate.
  * @returns {{type: string}} The object to dispatch to trigger the reducer to update the auth state
  */
@@ -121,7 +137,7 @@ export function loginUser(username, password) {
         })
         .then(function (response) {
             if (response.data.status === cms.MFA_REQUIRED_STATUS) {
-                dispatch(loginMfaRequired(response))
+                dispatch(handleLoginMfaRequired(response))
             } else {
                 handleUserLogin(response, dispatch)
             }
