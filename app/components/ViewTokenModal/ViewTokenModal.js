@@ -8,14 +8,9 @@ import * as authActions from '../../actions/authenticationActions'
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ProgressButton from 'react-progress-button'
 
-
-import * as messengerActions from '../../actions/messengerActions'
-
-
+import './ViewTokenModal.scss'
 
 // Some code from https://github.com/mathieudutour/react-progress-button
-
-import './ViewTokenModal.scss'
 
 // connect to the store in order to obtain the current vault token
 @connect((state) => {
@@ -24,94 +19,80 @@ import './ViewTokenModal.scss'
   }
 })
 
-
-
-
 export default class ViewTokenModal extends Component {
+
+  // handles two actions when the renew token button is clicked
+  constructor(props) {
+    super(props)
+
+    this.handleRenewTokenClicked = function() {
+      this.props.dispatch(authActions.refreshAuth(this.props.clientToken, '', false))
+
+      return new Promise(function(resolve, reject) {
+        setTimeout(resolve, 2000)
+      })
+    }.bind(this)
+  }
 
   render() {
     const {clientToken, dispatch} = this.props
     let tokenExpiresDate = sessionStorage.getItem('tokenExpiresDate');
-
-    console.log(dateDiffinMin(tokenExpiresDate))
+    let entry = clientToken
 
     return (
-      <div>
-        <div id="form-description" className="ncss-brand">
+      <div id='view-token-modal'>
+        <div id="view-token-modal-description" className="ncss-brand">
           <h1>View and Renew Client Token</h1>
-          <h4>This is your current client token, export it and use it with your client to do this. Renew your client token for these reasons. </h4>
+          <h4>Below is your current client token which can be used for debugging purposes or for local development, e.g. "export CERBERUS_TOKEN=..."</h4>
+        </div>
 
-          <h3>Client Token:</h3>
-          <p>{ clientToken }</p>
+        <div className="view-token-modal-token-wrapper">
+          <div className="view-token-modal-token">
+            <div className="view-token-modal-data-label">Client Token:</div>
+            <div className="view-token-modal-data-token-value">{clientToken} </div>
+          </div>
 
           <div className='row-buttons'>
-            {/* <div className="btn-wrapper btn-wrapper-left">
-            <input type="checkbox" className={! entry.revealed.value ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...entry.revealed}/>
-          </div> */}
-          <CopyToClipboard text={clientToken}>
-            {/* // what does this line do?  */}
-            <div className={clientToken.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
-              <div className='row-btn row-btn-copy'></div>
-            </div>
-          </CopyToClipboard>
+            <CopyToClipboard text={clientToken}>
+              {/* // what does this line do?  */}
+              <div className={clientToken.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
+                <div className='row-btn row-btn-copy'></div>
+              </div>
+            </CopyToClipboard>
+          </div>
+
+        </div>
+        <div className="view-token-modal-date-wrapper">
+          <div className="view-token-modal-date">
+            <div className="view-token-modal-data-label">Client Token Expiration Date:</div>
+            <div className="view-token-modal-data-date-value">{tokenExpiresDate}</div>
+          </div>
+        </div>
+        <div className="view-token-modal-time-left-wrapper">
+          <div className="view-token-modal-time-left">
+            <div className="view-token-modal-data-label">Client Token Time Remaining:</div>
+            <div className="view-token-modal-data-time-left-value">{dateDiffinMin(tokenExpiresDate)} minutes</div>
+          </div>
         </div>
 
+        <div id="renew-btn-container">
+          <div id='close-btn'
+            className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
+            onClick={ () => {
+              dispatch(modalActions.popModal())
+            }}>Close
+          </div>
 
-        <h3>Client Token Expiration Date:</h3>
-        <p>{tokenExpiresDate }</p>
-        <h3>Client Token Time Remaining:</h3>
-        <p> {dateDiffinMin(tokenExpiresDate)} minutes</p>
+          <ProgressButton id='renew-btn'
+            className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
+            onClick={this.handleRenewTokenClicked}
+            >Renew Token
+          </ProgressButton>
+        </div>
       </div>
 
-      <div id="renew-btn-container">
-        <div id='close-btn'
-          className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-          onClick={ () => {
-            dispatch(modalActions.popModal())
-          }}>Close
-        </div>
-
-        <ProgressButton ref='button' //id='renew-btn'
-        className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-
-        // onClick={ () => {
-        //   dispatch(authActions.refreshAuth(clientToken, '', false));
-        //   //  dispatch(messengerActions.addNewMessageWithTimeout('Your token has been renewed', 10000000))
-        //
-        //   // console.log("testing renew");
-        //
-        //   return new Promise(function(resolve, reject) {
-        //     setTimeout(resolve, 3000)
-        //   })
-        //
-        // }}
-        onClick={this.handleRefreshTokenClick}
-        >Renew Token
-      </ProgressButton>
-    </div>
-  </div>
-
-)
-}
-
-handleRefreshTokenClick() {
-    const {clientToken, dispatch} = this.props
-   dispatch(authActions.refreshAuth(clientToken, '', false));
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 3000)
-  })
-}
-
-// handleClick() {
-//     this.refs.button.loading();
-//     console.log("loading")
-//     //make asynchronious call
-//     setTimeout(function() {
-//       this.refs.button.success();
-//         console.log("success")
-//     }.bind(this), 3000);
-//   }
-
+    )
+  }
 }
 
 export function dateDiffinMin(expiresDate) {
