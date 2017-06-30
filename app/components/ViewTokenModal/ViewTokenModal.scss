@@ -202,15 +202,12 @@
   height: 40px;
   width: 110px;
 
-  // width: 100%;
-
   .ncss-btn-dark-grey {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 0px;
     padding-bottom: 0px;
   }
-
 
 }
 .pb-container .pb-button {
@@ -228,8 +225,6 @@
   outline: none;
   transition: background-color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s, border-radius 0.3s;
 }
-
-
 
 .pb-container .pb-button span {
   display: inherit;
@@ -257,20 +252,11 @@
   stroke: currentColor;
   stroke-width: 5;
 }
-// .pb-container .pb-button svg.pb-checkmark path,
-// .pb-container .pb-button svg.pb-cross path {
-//   stroke: #fff;
-//   stroke-linecap: round;
-//   stroke-width: 4;
-// }
-.pb-container.disabled .pb-button {
-  cursor: not-allowed;
-}
+
 .pb-container.loading .pb-button {
   // width: 90px;
   border-width: 6.5px;
   border-color: #ddd;
-  // cursor: wait;
   background-color: transparent;
   // padding: 0;
 }
@@ -283,20 +269,6 @@
   transition: opacity 0.15s 0.3s;
   opacity: 1;
 }
-// .pb-container.success .pb-button {
-//   border-color: #A0D468;
-//   background-color: #A0D468;
-// }
-// .pb-container.success .pb-button span {
-//   transition: all 0.15s;
-//   opacity: 0;
-//   display: none;
-// }
-
-
-// .pb-container.success .pb-button .pb-checkmark > path {
-//   opacity: 1;
-// }
 
 @keyframes spin {
   from {
@@ -306,45 +278,5 @@
   to {
     transform: translate(-50%, -50%) rotate(360deg);
     transform-origin: center center;
-  }
-}
-
-
-
-
-
-
-.info-block {
-  animation-name: anim-info-updated;
-  animation-duration: 8s;
-}
-
-@keyframes anim-info-updated {
-  0% {
-    border: 2px solid green;
-    background-color:  rgba(0, 128, 0, 0.5);
-    color: rgb(0, 64, 0);
-  }
-  4% {
-    border: 2px solid transparent;
-  }
-  8% {
-    border: 2px solid green;
-  }
-  12% {
-    border: 2px solid transparent;
-  }
-  16% {
-    border: 2px solid green;
-  }
-  50% {
-    border: 2px solid green;
-    background-color:  rgba(0, 128, 0, 0.5);
-    color: rgb(0, 64, 0);
-  }
-  100% {
-    border: 2px solid transparent;
-    background-color:  rgba(0, 128, 0, 0);
-    color: rgb(0, 128, 0);
   }
 }
