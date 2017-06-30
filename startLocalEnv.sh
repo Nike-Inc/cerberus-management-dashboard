@@ -21,9 +21,9 @@ echo ""
 echo ""
 echo "Starting vault locally"
 
-#vault server -config=local-persist.hcl 1>logs/vault.stdout.log 2>&1 &
+vault server -config=local-persist.hcl 1>logs/vault.stdout.log 2>&1 &
 data=$(curl -s -X PUT -d '{"secret_shares":5, "secret_threshold": 3}' http://127.0.0.1:$VAULT_PORT/v1/sys/init)
-#VAULT_PID=$!
+VAULT_PID=$!
 
 echo ""
 echo "Waiting for vault to start"

@@ -6,7 +6,6 @@ import * as modalActions from '../../actions/modalActions'
 import * as appActions from '../../actions/appActions'
 import * as authActions from '../../actions/authenticationActions'
 import CopyToClipboard from 'react-copy-to-clipboard';
-import ProgressButton from 'react-progress-button'
 
 import './ViewTokenModal.scss'
 
@@ -22,16 +21,11 @@ import './ViewTokenModal.scss'
 
 export default class ViewTokenModal extends Component {
 
-  // handles two actions when the renew token button is clicked
   constructor(props) {
     super(props)
 
     this.handleRenewTokenClicked = function() {
       this.props.dispatch(authActions.refreshAuth(this.props.clientToken, '', false))
-
-      return new Promise(function(resolve, reject) {
-        setTimeout(resolve, 2000)
-      })
     }.bind(this)
   }
 
@@ -55,7 +49,6 @@ export default class ViewTokenModal extends Component {
 
           <div className='row-buttons'>
             <CopyToClipboard text={clientToken}>
-              {/* // what does this line do?  */}
               <div className={clientToken.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
                 <div className='row-btn row-btn-copy'></div>
               </div>
