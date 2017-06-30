@@ -16,6 +16,7 @@ import './ViewTokenModal.scss'
 @connect((state) => {
   return {
     clientToken: state.auth.vaultToken,
+    isAuthenticating: state.auth.isAuthenticating
   }
 })
 
@@ -35,7 +36,7 @@ export default class ViewTokenModal extends Component {
   }
 
   render() {
-    const {clientToken, dispatch} = this.props
+    const {clientToken, dispatch, isAuthenticating} = this.props
     let tokenExpiresDate = sessionStorage.getItem('tokenExpiresDate');
     let entry = clientToken
 
@@ -83,11 +84,21 @@ export default class ViewTokenModal extends Component {
             }}>Close
           </div>
 
-          <ProgressButton id='renew-btn'
+          <div id='renew-btn'
             className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
             onClick={this.handleRenewTokenClicked}
             >Renew Token
-          </ProgressButton>
+          </div>
+        </div>
+        <div id='fountainG' className={isAuthenticating ? 'show-me' : 'hide-me'}>
+          <div id='fountainG_1' className='fountainG'></div>
+          <div id='fountainG_2' className='fountainG'></div>
+          <div id='fountainG_3' className='fountainG'></div>
+          <div id='fountainG_4' className='fountainG'></div>
+          <div id='fountainG_5' className='fountainG'></div>
+          <div id='fountainG_6' className='fountainG'></div>
+          <div id='fountainG_7' className='fountainG'></div>
+          <div id='fountainG_8' className='fountainG'></div>
         </div>
       </div>
 
