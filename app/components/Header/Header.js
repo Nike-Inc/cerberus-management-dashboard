@@ -5,9 +5,7 @@ import * as headerActions from '../../actions/headerActions'
 import * as authActions from '../../actions/authenticationActions'
 import './Header.scss'
 import '../../assets/images/cerberus-logo-narrow-off-white.svg'
-
 import * as modalActions from '../../actions/modalActions'
-// import CreateSDBoxForm from '../CreateSDBoxForm/CreateSDBoxForm'
 import ViewTokenModal from '../ViewTokenModal/ViewTokenModal'
 
 export default class Header extends Component {
