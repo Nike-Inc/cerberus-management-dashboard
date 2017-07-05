@@ -203,7 +203,7 @@ export function refreshAuth(token, redirectPath='/', redirect=true) {
                 if (redirect) {
                     hashHistory.push(redirectPath)
                 }
-            }, 3000);
+            }, 2000);
 
         })
         .catch(function (response) {

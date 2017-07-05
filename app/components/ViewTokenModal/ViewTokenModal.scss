@@ -3,7 +3,6 @@
 #view-token-modal {
   width: 1050px;
 
-  // don't know if used, what is this for, what is this from
   .ncss-label {
     padding-bottom: 5px;
     padding-top: 5px;
@@ -36,10 +35,6 @@
 
   .view-token-modal-token-wrapper {
     margin-top: 15px;
-    border-style: solid;
-    border-radius: 2px;
-    border-color: $snkrs_medium_grey;
-    border-width: 1px;
     padding-top: 5px;
     padding-left: 7px;
     padding-right: 7px;
@@ -55,10 +50,6 @@
 
   .view-token-modal-date-wrapper {
     margin-top: 15px;
-    border-style: solid;
-    border-radius: 2px;
-    border-color: $snkrs_medium_grey;
-    border-width: 1px;
     padding-top: 7px;
     padding-left: 7px;
     padding-right: 7px;
@@ -74,10 +65,6 @@
 
   .view-token-modal-time-left-wrapper {
     margin-top: 15px;
-    border-style: solid;
-    border-radius: 2px;
-    border-color: $snkrs_medium_grey;
-    border-width: 1px;
     padding-top: 7px;
     padding-left: 7px;
     padding-right: 7px;

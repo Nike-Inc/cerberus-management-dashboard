@@ -9,8 +9,6 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import './ViewTokenModal.scss'
 
-// Some code from https://github.com/mathieudutour/react-progress-button
-
 // connect to the store in order to obtain the current vault token
 @connect((state) => {
   return {
@@ -32,7 +30,6 @@ export default class ViewTokenModal extends Component {
   render() {
     const {clientToken, dispatch, isAuthenticating} = this.props
     let tokenExpiresDate = sessionStorage.getItem('tokenExpiresDate');
-    let entry = clientToken
 
     return (
       <div id='view-token-modal'>
@@ -70,31 +67,29 @@ export default class ViewTokenModal extends Component {
         </div>
 
         <div id="renew-btn-container">
+          <div id='fountainG' className={isAuthenticating ? 'show-me' : 'hide-me'}>
+            <div id='fountainG_1' className='fountainG'></div>
+            <div id='fountainG_2' className='fountainG'></div>
+            <div id='fountainG_3' className='fountainG'></div>
+            <div id='fountainG_4' className='fountainG'></div>
+            <div id='fountainG_5' className='fountainG'></div>
+            <div id='fountainG_6' className='fountainG'></div>
+            <div id='fountainG_7' className='fountainG'></div>
+            <div id='fountainG_8' className='fountainG'></div>
+          </div>
           <div id='close-btn'
             className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
             onClick={ () => {
               dispatch(modalActions.popModal())
             }}>Close
           </div>
-
           <div id='renew-btn'
             className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
             onClick={this.handleRenewTokenClicked}
             >Renew Token
           </div>
         </div>
-        <div id='fountainG' className={isAuthenticating ? 'show-me' : 'hide-me'}>
-          <div id='fountainG_1' className='fountainG'></div>
-          <div id='fountainG_2' className='fountainG'></div>
-          <div id='fountainG_3' className='fountainG'></div>
-          <div id='fountainG_4' className='fountainG'></div>
-          <div id='fountainG_5' className='fountainG'></div>
-          <div id='fountainG_6' className='fountainG'></div>
-          <div id='fountainG_7' className='fountainG'></div>
-          <div id='fountainG_8' className='fountainG'></div>
-        </div>
       </div>
-
     )
   }
 }
