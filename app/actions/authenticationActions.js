@@ -241,7 +241,6 @@ export function logoutUser(token) {
         .catch(function (response) {
             log.error('Failed to logout user', response)
             dispatch(messengerActions.addNewMessage(<ApiError message="Failed to Logout User" response={response} />))
-            // dispatch(modalActions.clearAllModals())
         })
     }
 }
