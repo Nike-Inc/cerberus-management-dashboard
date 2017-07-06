@@ -189,6 +189,7 @@ export function finalizeMfaLogin(otpToken, mfaDeviceId, stateToken) {
  */
 export function refreshAuth(token, redirectPath='/', redirect=true) {
     return function(dispatch) {
+        dispatch(loginUserRequest())
         return axios({
             url: environmentService.getDomain() + cms.USER_AUTH_PATH_REFRESH,
             headers: {'X-Vault-Token': token},
@@ -197,12 +198,17 @@ export function refreshAuth(token, redirectPath='/', redirect=true) {
         .then(function (response) {
             dispatch(handleRemoveAuthTokenTimeout())
             dispatch(handleRemoveSessionWarningTimeout())
-            handleUserLogin(response, dispatch, false)
-            if (redirect) {
-                hashHistory.push(redirectPath)
-            }
+            setTimeout(function(){
+                handleUserLogin(response, dispatch, false)
+                if (redirect) {
+                    hashHistory.push(redirectPath)
+                }
+            }, 2000);
+
         })
         .catch(function (response) {
+            // Clears View Token Modal upon max refresh token limit to prevent errors
+            dispatch(modalActions.clearAllModals())
             log.error('Failed to login user', response)
             dispatch(messengerActions.addNewMessage(<ApiError message="Failed to refresh user token" response={response} />))
             dispatch(resetAuthState())
