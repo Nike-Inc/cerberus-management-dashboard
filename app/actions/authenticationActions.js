@@ -207,6 +207,8 @@ export function refreshAuth(token, redirectPath='/', redirect=true) {
 
         })
         .catch(function (response) {
+            // Clears View Token Modal upon max refresh token limit to prevent errors
+            dispatch(modalActions.clearAllModals())
             log.error('Failed to login user', response)
             dispatch(messengerActions.addNewMessage(<ApiError message="Failed to refresh user token" response={response} />))
             dispatch(resetAuthState())
@@ -239,6 +241,7 @@ export function logoutUser(token) {
         .catch(function (response) {
             log.error('Failed to logout user', response)
             dispatch(messengerActions.addNewMessage(<ApiError message="Failed to Logout User" response={response} />))
+            // dispatch(modalActions.clearAllModals())
         })
     }
 }
