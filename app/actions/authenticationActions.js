@@ -210,9 +210,9 @@ export function refreshAuth(token, redirectPath='/', redirect=true) {
             // Clears View Token Modal upon max refresh token limit to prevent errors
             dispatch(modalActions.clearAllModals())
             log.error('Failed to login user', response)
-            dispatch(messengerActions.addNewMessage(<ApiError message="Failed to refresh user token" response={response} />))
             dispatch(resetAuthState())
             hashHistory.push('dashboard/#/login')
+            dispatch(messengerActions.addNewMessage(<ApiError message="Failed to refresh user token" response={response} />))
         })
     }
 }
