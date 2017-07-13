@@ -22,6 +22,14 @@ export default class ViewTokenModal extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      isTokenRevealed: false
+    }
+
+    this.handleHideButtonClicked = function() {
+      this.setState({ isTokenRevealed: !this.state.isTokenRevealed });
+    }.bind(this)
+
     this.handleRenewTokenClicked = function() {
       this.props.dispatch(authActions.refreshAuth(this.props.clientToken, '', false))
     }.bind(this)
@@ -41,64 +49,75 @@ export default class ViewTokenModal extends Component {
         <div className="view-token-modal-token-wrapper">
           <div className="view-token-modal-token">
             <div className="view-token-modal-data-label">Client Token:</div>
-            <div className="view-token-modal-data-token-value">{clientToken} </div>
+            <div className="view-token-modal-data-token-value"
+              style={{display: this.state.isTokenRevealed ? 'block' : 'none' }}
+              >{clientToken}
+            </div>
+            <div className="secret-value-placeHolder"
+              style={{display: ! this.state.isTokenRevealed? 'block' : 'none' }}
+              >Hidden, click the reveal button
+            </div>
           </div>
-
           <div className='row-buttons'>
-            <CopyToClipboard text={clientToken}>
-              <div className={clientToken.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
-                <div className='row-btn row-btn-copy'></div>
+            <div className="btn-wrapper btn-wrapper-left">
+              <input type="checkbox" className={! this.state.isTokenRevealed ? 'row-btn row-btn-reveal' : 'row-btn row-btn-revealed'} {...this.state.isTokenRevealed}
+                onClick={this.handleHideButtonClicked}/>
               </div>
-            </CopyToClipboard>
+              <CopyToClipboard text={clientToken}>
+                <div className={clientToken.length <= 1 ? 'btn-wrapper btn-wrapper-right' : 'btn-wrapper'}>
+                  <div className='row-btn row-btn-copy'></div>
+                </div>
+              </CopyToClipboard>
+            </div>
           </div>
 
-        </div>
-        <div className="view-token-modal-date-wrapper">
-          <div className="view-token-modal-date">
-            <div className="view-token-modal-data-label">Client Token Expiration Date:</div>
-            <div className="view-token-modal-data-date-value">{tokenExpiresDate}</div>
+          <div className="view-token-modal-date-wrapper">
+            <div className="view-token-modal-date">
+              <div className="view-token-modal-data-label">Client Token Expiration Date:</div>
+              <div className="view-token-modal-data-date-value">{tokenExpiresDate}</div>
+            </div>
           </div>
-        </div>
-        <div className="view-token-modal-time-left-wrapper">
-          <div className="view-token-modal-time-left">
-            <div className="view-token-modal-data-label">Client Token Time Remaining:</div>
-            <div className="view-token-modal-data-time-left-value">{dateDiffinMin(tokenExpiresDate)} minutes</div>
+          <div className="view-token-modal-time-left-wrapper">
+            <div className="view-token-modal-time-left">
+              <div className="view-token-modal-data-label">Client Token Time Remaining:</div>
+              <div className="view-token-modal-data-time-left-value">{dateDiffinMin(tokenExpiresDate)} minutes</div>
+            </div>
           </div>
-        </div>
 
-        <div id="renew-btn-container">
-          <div id='fountainG' className={isAuthenticating ? 'show-me' : 'hide-me'}>
-            <div id='fountainG_1' className='fountainG'></div>
-            <div id='fountainG_2' className='fountainG'></div>
-            <div id='fountainG_3' className='fountainG'></div>
-            <div id='fountainG_4' className='fountainG'></div>
-            <div id='fountainG_5' className='fountainG'></div>
-            <div id='fountainG_6' className='fountainG'></div>
-            <div id='fountainG_7' className='fountainG'></div>
-            <div id='fountainG_8' className='fountainG'></div>
-          </div>
-          <div id='close-btn'
-            className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-            onClick={ () => {
-              dispatch(modalActions.popModal())
-            }}>Close
-          </div>
-          <div id='renew-btn'
-            className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
-            onClick={this.handleRenewTokenClicked}
-            >Renew Token
+          <div id="renew-btn-container">
+            <div id='fountainG' className={isAuthenticating ? 'show-me' : 'hide-me'}>
+              <div id='fountainG_1' className='fountainG'></div>
+              <div id='fountainG_2' className='fountainG'></div>
+              <div id='fountainG_3' className='fountainG'></div>
+              <div id='fountainG_4' className='fountainG'></div>
+              <div id='fountainG_5' className='fountainG'></div>
+              <div id='fountainG_6' className='fountainG'></div>
+              <div id='fountainG_7' className='fountainG'></div>
+              <div id='fountainG_8' className='fountainG'></div>
+            </div>
+            <div id='close-btn'
+              className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
+              onClick={ () => {
+                dispatch(modalActions.popModal())
+              }}>Close
+            </div>
+            <button id='renew-btn'
+              className='btn ncss-btn-dark-grey ncss-brand pt3-sm pr5-sm pb3-sm pl5-sm pt2-lg pb2-lg u-uppercase'
+              onClick={this.handleRenewTokenClicked}
+              disabled={isAuthenticating}
+              >Renew Token
+            </button>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
-}
 
-export function dateDiffinMin(expiresDate) {
-  var expDate = new Date(expiresDate)
-  var currentDate = new Date()
-  var t2 = expDate.getTime();
-  var t1 = currentDate.getTime();
-  var diff = parseInt((t2-t1)/(60*1000));
-  return diff
-}
+  export function dateDiffinMin(expiresDate) {
+    var expDate = new Date(expiresDate)
+    var currentDate = new Date()
+    var t2 = expDate.getTime();
+    var t1 = currentDate.getTime();
+    var diff = parseInt((t2-t1)/(60*1000));
+    return diff
+  }
