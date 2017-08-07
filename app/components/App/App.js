@@ -1,6 +1,8 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import axios from 'axios'
+import * as appActions from '../../actions/appActions'
 import Login from '../Login/Login'
 import Modal from '../Modal/Modal'
 import Header from '../Header/Header'
@@ -20,13 +22,25 @@ import './App.scss'
         userName: state.auth.userName,
         displayUserContextMenu: state.header.displayUserContextMenu,
         vaultToken: state.auth.vaultToken,
-        modalStack: state.modal.modalStack
+        modalStack: state.modal.modalStack,
+        hasDashboardMetadataLoaded: state.app.metadata.hasLoaded,
+        dashboardVersion: state.app.metadata.version
     }
 })
+
+
 export default class App extends Component {
 
+    componentDidMount() {
+        if (! this.props.hasDashboardMetadataLoaded) {
+            this.props.dispatch(appActions.loadDashboardMetadata())
+        }
+    }
+
     render() {
-        const {isAdmin, userName, displayUserContextMenu, dispatch, vaultToken, modalStack, children, isSessionExpired, isAuthenticated} = this.props
+        const {isAdmin, userName, displayUserContextMenu, dispatch, vaultToken, modalStack, children, isSessionExpired, isAuthenticated, dashboardVersion} = this.props
+
+        axios.defaults.headers.common['X-Cerberus-Client'] = `Dashboard/${dashboardVersion}`
 
         return (
             <div id='main-wrapper'>
