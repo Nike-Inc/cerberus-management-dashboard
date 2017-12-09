@@ -12,3 +12,4 @@ reports/
 logs/
 vault/
 *.tar.gz
+package-lock.json
